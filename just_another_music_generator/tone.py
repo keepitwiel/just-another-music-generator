@@ -24,21 +24,26 @@ class Tone:
         :return: rendered value
         """
         if type(t) == float:
-            x = 0
-            u = t - self.start_time
-            if 0 < u < self.duration:
-                envelope_phase = (u / self.duration) * np.pi
-                envelope = np.sin(envelope_phase)
-                tone_phase = u * self.pitch * 2 * np.pi
-                tone = np.sin(tone_phase)
-                x = self.volume * envelope * tone
-            return x
+            return self.render_scalar(t)
         elif type(t) == np.ndarray:
-            x = np.empty_like(t)
-            u = t - self.start_time
-            envelope_phase = u * np.pi
-            envelope = ((0 < u) & (u < self.duration)) * np.sin(envelope_phase)
+            return self.render_array(t)
+
+    def render_scalar(self, t):
+        x = 0
+        u = t - self.start_time
+        if 0.0 < u < self.duration:
+            envelope_phase = (u / self.duration) * np.pi
+            envelope = np.sin(envelope_phase)
             tone_phase = u * self.pitch * 2 * np.pi
             tone = np.sin(tone_phase)
             x = self.volume * envelope * tone
-            return x
+        return x
+
+    def render_array(self, t):
+        u = t - self.start_time
+        envelope_phase = u / self.duration * np.pi
+        envelope = ((0 < u) & (u < self.duration)) * np.sin(envelope_phase)
+        tone_phase = u * self.pitch * 2 * np.pi
+        tone = np.sin(tone_phase)
+        x = self.volume * envelope * tone
+        return x

@@ -9,7 +9,7 @@ MAJOR = [0, 2, 4, 5, 7, 9, 11, 12]
 PENTATONIC = [0, 2, 5, 7, 9, 12]
 
 
-def generate_activations(n_rules, tone_range, sequence_length):
+def generate_activations(n_rules, tone_range, sequence_length, seed=None):
     """
     Generates boolean matrices from 1-D cellular automata with randomly selected rules,
     and then performs the elemtwise "and" operation on all of them.
@@ -23,6 +23,9 @@ def generate_activations(n_rules, tone_range, sequence_length):
     """
     # we exclude rule 0 and 255, because they produce all 0s or all 1s
     possible_rules = [i for i in range(1, 255)]
+
+    if seed:
+        np.random.seed(seed)
 
     rules = np.random.choice(possible_rules, n_rules, replace=False)
     result = [
@@ -76,6 +79,7 @@ def generate_audio(
     tone_duration, 
     scale, 
     root_frequency,
+    seed,
 ):
     """
     Generates audio
@@ -88,9 +92,12 @@ def generate_audio(
     :param tone_duration: tone duration in seconds
     :param scale: which musical scale to use. e.g. major, pentatonic
     :param root_frequency: frequency of the lowest note
+    :param seed: random seed
     :return: numpy array containing audio
     """
-    activations = generate_activations(n_rules=n_rules, tone_range=tone_range, sequence_length=sequence_length)
+    activations = generate_activations(
+        n_rules=n_rules, tone_range=tone_range, sequence_length=sequence_length, seed=seed
+    )
     seq = trigger_sounds(activations, interval, tone_duration, scale, root_frequency)
     print(f"Tones in sequence: {len(seq)}, duration: {seq.duration}")
     au = seq.render(sample_rate=sample_rate)
