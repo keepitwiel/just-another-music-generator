@@ -4,7 +4,7 @@
 
 * Run the following within virtual environment:
 ```commandline
-    python setup.py install
+python setup.py install
 ```
 
 ## CLI usage
@@ -14,7 +14,7 @@
 Install dependencies:
 
 ```commandline
-    pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 Run unit tests: [FOO]
