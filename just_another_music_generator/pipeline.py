@@ -35,7 +35,7 @@ def generate_activations(n_rules, tone_range, sequence_length, seed=None):
     return result
 
 
-def trigger_sounds(activations, interval, duration, scale, root_frequency):
+def trigger_sounds(activations: np.ndarray, interval: float, duration: float, scale: str, root_frequency: float):
     """
     given boolean activation matrix, trigger sounds where matrix == 1 into a Sequence object
 
@@ -47,6 +47,7 @@ def trigger_sounds(activations, interval, duration, scale, root_frequency):
     :return: Sequence object
     """
     s = Sequence()
+
     for n in range(activations.shape[0]):
         for m in range(activations.shape[1]):
             if activations[n, m]:

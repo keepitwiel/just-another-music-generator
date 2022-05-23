@@ -4,3 +4,4 @@ jupyterlab
 pydub
 ffmpeg
 ffprobe
+click
