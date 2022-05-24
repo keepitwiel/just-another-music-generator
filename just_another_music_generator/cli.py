@@ -52,8 +52,8 @@ def cli():
     help='frequency of the lowest note'
 )
 @click.option(
-    '--seed', default=None, show_default=True,
-    help='Random seed. If seed is None, a seed is randomly chosen. If seed < 0, a fixed initial state is used.'
+    '--seed', default=-1, show_default=True,
+    help='Random seed. If seed < 0, a fixed nonzero initial state is used.'
 )
 def generate(
     n_rules,
@@ -69,12 +69,6 @@ def generate(
     """
     Generates audio and saves to tmp file as Numpy array.
     """
-
-    if seed is None:
-        seed = np.random.randint(0, 2**31)
-
-    if seed < 0:
-        seed = None
 
     logger.info(f"Number of rules: {n_rules}\n"
                 f"Tone range: {tone_range}\n"

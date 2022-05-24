@@ -30,18 +30,26 @@ def step(x, rule_b):
     return rule_b[7 - z]
 
 
-def generate_cellular_automaton(rule, size=100, steps=100, seed=None):
-    """Simulate an elementary cellular automaton given
-    its rule (number between 0 and 255)."""
+def generate_cellular_automaton(rule: int, size: int = 100, steps: int = 100, seed: int = -1):
+    """
+    Simulate an elementary cellular automaton given its rule (number between 0 and 255).
+
+    :param rule: which rule the automaton performs
+    :param size: width of the "line" on which the automaton operates
+    :param steps: number of times the calculation is performed
+    :param seed: random seed
+    """
     # Compute the binary representation of the rule.
     rule_b = int_to_bin(rule)
     x = np.zeros((steps, size), dtype=np.int8)
-    # Random initial state.
-    if seed:
+
+    if seed < 0:
+        # fixed initial state
+        x[0, size//2] = 1
+    else:
+        # Random initial state.
         np.random.seed(seed)
         x[0, :] = np.random.rand(size) < .5
-    else:
-        x[0, size//2] = 1
 
     # Apply the step function iteratively.
     for i in range(steps - 1):

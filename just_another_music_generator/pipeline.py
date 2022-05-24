@@ -9,7 +9,7 @@ MAJOR = [0, 2, 4, 5, 7, 9, 11, 12]
 PENTATONIC = [0, 2, 5, 7, 9, 12]
 
 
-def generate_activations(n_rules, tone_range, sequence_length, seed=None):
+def generate_activations(n_rules, tone_range, sequence_length, seed):
     """
     Generates boolean matrices from 1-D cellular automata with randomly selected rules,
     and then performs the elemtwise "and" operation on all of them.
@@ -19,17 +19,19 @@ def generate_activations(n_rules, tone_range, sequence_length, seed=None):
     :param n_rules: number of rules to randomly select
     :param tone_range: range of tones to use in the 12-tone system
     :param sequence_length: sequence length
+    :param seed: random seed. if seed < 0, a single fixed rule (30) is chosen
     :return: sequence_length x tone_range boolean matrix
     """
     # we exclude rule 0 and 255, because they produce all 0s or all 1s
     possible_rules = [i for i in range(1, 255)]
-
-    if seed:
+    if seed < 0:
+        rules = np.array([30] * n_rules)
+    else:
         np.random.seed(seed)
-
-    rules = np.random.choice(possible_rules, n_rules, replace=False)
+        rules = np.random.choice(possible_rules, n_rules, replace=False)
     result = [
-        generate_cellular_automaton(rule=rule, size=tone_range, steps=sequence_length) for rule in rules
+        generate_cellular_automaton(rule=rule, size=tone_range, steps=sequence_length, seed=seed)
+        for rule in rules
     ]
     result = np.prod(np.stack(result, axis=2), axis=2)
     return result
