@@ -1,4 +1,6 @@
 import numpy as np
+from tqdm import tqdm
+
 from just_another_music_generator.tone import Tone
 
 
@@ -34,9 +36,7 @@ class Sequence:
         t = np.linspace(0, self.duration, n)
         assert len(t) == len(result)
 
-        for i, tone in enumerate(self.sequence):
-            if i % 100 == 0:
-                print(f"rendering tone {i}")
+        for i, tone in enumerate(tqdm(self.sequence)):
             result += tone.render(t)
 
         if normalize:

@@ -5,3 +5,4 @@ pydub
 ffmpeg
 ffprobe
 click
+tqdm
