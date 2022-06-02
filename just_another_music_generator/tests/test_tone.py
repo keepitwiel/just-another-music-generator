@@ -8,19 +8,6 @@ def test_tone():
     assert True
 
 
-def test_tone_render():
-    tone = Tone(start_time=0, duration=1, pitch=440, volume=0.5)
-
-    x = tone.render(t=-1.0)
-    assert x == 0
-
-    x = tone.render(t=2.0)
-    assert x == 0
-
-    x = tone.render(t=0.3333333)
-    assert np.abs(x) > 0
-
-
 def test_tone_render_array():
     tone = Tone(start_time=0, duration=1, pitch=440, volume=0.5)
     t_array = np.linspace(-1, 2, 101)

@@ -16,28 +16,14 @@ class Tone:
         self.pitch = pitch
         self.volume = volume
 
-    def render(self, t):
+    def render(self, t: np.ndarray) -> np.ndarray:
         """
         renders tone value at given time
 
-        :param t: time at which to render the tone (can be a scalar or array)
+        :param t: array of timestamps at which to render the tone
         :return: rendered value
         """
-        if type(t) == float:
-            return self.render_scalar(t)
-        elif type(t) == np.ndarray:
-            return self.render_array(t)
-
-    def render_scalar(self, t):
-        x = 0
-        u = t - self.start_time
-        if 0.0 < u < self.duration:
-            envelope_phase = (u / self.duration) * np.pi
-            envelope = np.sin(envelope_phase)
-            tone_phase = u * self.pitch * 2 * np.pi
-            tone = np.sin(tone_phase)
-            x = self.volume * envelope * tone
-        return x
+        return self.render_array(t)
 
     def render_array(self, t):
         u = t - self.start_time
