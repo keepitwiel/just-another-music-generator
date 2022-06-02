@@ -33,6 +33,8 @@ def step(x, rule_b):
 def generate_cellular_automaton(rule: int, size: int = 100, steps: int = 100, seed: int = -1):
     """
     Simulate an elementary cellular automaton given its rule (number between 0 and 255).
+    If seed < 0, then we initialize with a zero "line" except for the middle element
+    (left of middle if the line length is even)
 
     :param rule: which rule the automaton performs
     :param size: width of the "line" on which the automaton operates

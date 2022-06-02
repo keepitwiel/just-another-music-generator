@@ -32,7 +32,7 @@ def test_step_one():
 
 
 def test_generate_cellular_automaton_nonrandom():
-    result = generate_cellular_automaton(rule=30, size=5, steps=2, seed=None)
+    result = generate_cellular_automaton(rule=30, size=5, steps=2, seed=-1)
     expected = np.array(
         [
             [0, 0, 1, 0, 0],
