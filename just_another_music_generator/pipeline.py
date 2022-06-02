@@ -9,7 +9,7 @@ MAJOR = [0, 2, 4, 5, 7, 9, 11, 12]
 PENTATONIC = [0, 2, 5, 7, 9, 12]
 
 
-def generate_activations(n_rules, tone_range, sequence_length, seed):
+def generate_activations(n_rules, tone_range, sequence_length, skip, seed):
     """
     Generates boolean matrices from 1-D cellular automata with randomly selected rules,
     and then performs the elemtwise "and" operation on all of them.
@@ -19,6 +19,7 @@ def generate_activations(n_rules, tone_range, sequence_length, seed):
     :param n_rules: number of rules to randomly select
     :param tone_range: range of tones to use in the 12-tone system
     :param sequence_length: sequence length
+    :param skip: number of initial tones to skip
     :param seed: random seed. if seed < 0, a single fixed rule (30) is chosen
     :return: sequence_length x tone_range boolean matrix
     """
@@ -30,7 +31,9 @@ def generate_activations(n_rules, tone_range, sequence_length, seed):
         np.random.seed(seed)
         rules = np.random.choice(possible_rules, n_rules, replace=False)
     result = [
-        generate_cellular_automaton(rule=rule, size=tone_range, steps=sequence_length, seed=seed)
+        generate_cellular_automaton(
+            rule=rule, size=tone_range, steps=sequence_length, skip=skip, seed=seed,
+        )
         for rule in rules
     ]
     result = np.prod(np.stack(result, axis=2), axis=2)
@@ -77,6 +80,7 @@ def generate_audio(
     n_rules, 
     tone_range, 
     sequence_length,
+    skip,
     sample_rate, 
     interval, 
     tone_duration, 
@@ -90,6 +94,7 @@ def generate_audio(
     :param n_rules: number of cellular automata to use
     :param tone_range: range of tones to use in the 12-tone system
     :param sequence_length: sequence length
+    :param skip: number of tones to skip from start
     :param sample_rate: number of audio samples per second
     :param interval: interval between tones in seconds
     :param tone_duration: tone duration in seconds
@@ -99,7 +104,11 @@ def generate_audio(
     :return: numpy array containing audio
     """
     activations = generate_activations(
-        n_rules=n_rules, tone_range=tone_range, sequence_length=sequence_length, seed=seed
+        n_rules=n_rules,
+        tone_range=tone_range,
+        sequence_length=sequence_length,
+        skip=skip,
+        seed=seed,
     )
     seq = trigger_sounds(activations, interval, tone_duration, scale, root_frequency)
     print(f"Tones in sequence: {len(seq)}, duration: {seq.duration}")

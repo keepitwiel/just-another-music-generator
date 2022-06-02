@@ -24,15 +24,19 @@ def cli():
     help='Number of cellular automata to use.'
 )
 @click.option(
-    '--tone-range', default=48, show_default=True,
+    '--tone-range', default=24, show_default=True,
     help='Range of tones to use in the 12-tone system.'
 )
 @click.option(
-    '--sequence-length', default=64, show_default=True,
+    '--sequence-length', default=256, show_default=True,
     help='Sequence length expressed in number of tones.'
 )
 @click.option(
-    '--sample-rate', default=12000, show_default=True,
+    '--skip', default=128, show_default=True,
+    help='Number of initial tones to skip.'
+)
+@click.option(
+    '--sample-rate', default=96000, show_default=True,
     help='Number of audio samples per second.'
 )
 @click.option(
@@ -48,7 +52,7 @@ def cli():
     help='Which musical scale to use. e.g. major, pentatonic.'
 )
 @click.option(
-    '--root-frequency', default=110, show_default=True,
+    '--root-frequency', default=440, show_default=True,
     help='frequency of the lowest note'
 )
 @click.option(
@@ -56,15 +60,16 @@ def cli():
     help='Random seed. If seed < 0, a fixed nonzero initial state is used.'
 )
 def generate(
-    n_rules,
-    tone_range,
-    sequence_length,
-    sample_rate,
-    interval,
-    tone_duration,
-    scale,
-    root_frequency,
-    seed,
+    n_rules: int,
+    tone_range: int,
+    sequence_length: int,
+    skip : int,
+    sample_rate: int,
+    interval: float,
+    tone_duration: float,
+    scale: str,
+    root_frequency: float,
+    seed: int,
 ):
     """
     Generates audio and saves to tmp file as Numpy array.
@@ -73,6 +78,7 @@ def generate(
     logger.info(f"Number of rules: {n_rules}\n"
                 f"Tone range: {tone_range}\n"
                 f"Sequence length: {sequence_length}\n"
+                f"Skip: {skip}\n"
                 f"Sample rate: {sample_rate}\n"
                 f"Tone interval: {interval}\n"
                 f"Tone duration: {tone_duration}\n"
@@ -84,6 +90,7 @@ def generate(
         n_rules,
         tone_range,
         sequence_length,
+        skip,
         sample_rate,
         interval,
         tone_duration,
