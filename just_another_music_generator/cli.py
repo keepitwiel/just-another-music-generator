@@ -63,7 +63,7 @@ def generate(
     n_rules: int,
     tone_range: int,
     sequence_length: int,
-    skip : int,
+    skip: int,
     sample_rate: int,
     interval: float,
     tone_duration: float,
@@ -75,16 +75,21 @@ def generate(
     Generates audio and saves to tmp file as Numpy array.
     """
 
-    logger.info(f"Number of rules: {n_rules}\n"
-                f"Tone range: {tone_range}\n"
-                f"Sequence length: {sequence_length}\n"
-                f"Skip: {skip}\n"
-                f"Sample rate: {sample_rate}\n"
-                f"Tone interval: {interval}\n"
-                f"Tone duration: {tone_duration}\n"
-                f"Scale: {scale}\n"
-                f"Root frequency: {root_frequency}\n"
-                f"Random seed: {seed}\n\n")
+    params = f"Number of rules: {n_rules}\n" \
+        f"Tone range: {tone_range}\n" \
+        f"Sequence length: {sequence_length}\n" \
+        f"Skip: {skip}\n" \
+        f"Sample rate: {sample_rate}\n" \
+        f"Tone interval: {interval}\n" \
+        f"Tone duration: {tone_duration}\n" \
+        f"Scale: {scale}\n" \
+        f"Root frequency: {root_frequency}\n" \
+        f"Random seed: {seed}\n\n"
+
+    logger.info(params)
+
+    hashed = hex(abs(hash(params)))[2:]
+    logger.info(f"Unique hash of parameters: {hashed}")
 
     au = generate_audio(
         n_rules,
@@ -99,7 +104,21 @@ def generate(
         seed,
     )
 
-    np.save('/tmp/tmp.npy', au)
+    # TODO: save as WAV file
+    # TODO: also save artifacts
+
+    path = f'/tmp/{hashed}'
+    if ~os.path.exists(path):
+        os.mkdir(path)
+
+    params_path = f'{path}/params.txt'
+    logger.info(f'Write parameters to {params_path}...')
+    with open(params_path, 'w+') as file:
+        file.write(params)
+
+    audio_path = f'{path}/audio.npy'
+    logger.info(f'Write audio to {audio_path}...')
+    np.save(audio_path, au)
 
 
 if __name__ == '__main__':

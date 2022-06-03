@@ -6,7 +6,7 @@ from just_another_music_generator.tone import Tone
 
 
 MAJOR = [0, 2, 4, 5, 7, 9, 11, 12]
-PENTATONIC = [0, 2, 5, 7, 9, 12]
+PENTATONIC = [0, 3, 5, 7, 10, 12]  # note: minor pentatonic
 
 
 def generate_activations(n_rules: int, tone_range: int, sequence_length: int, skip: int, seed: int):
