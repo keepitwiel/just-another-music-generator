@@ -3,6 +3,7 @@ import os
 import sys
 
 import numpy as np
+from pydub import AudioSegment
 
 from just_another_music_generator.automata import generate_cellular_automaton
 from just_another_music_generator.sequence import Sequence
@@ -169,7 +170,6 @@ def pipeline(
         seed,
     )
 
-    # TODO: save as WAV file
     # TODO: also save artifacts
 
     if not (os.path.exists(output_root)):
@@ -187,9 +187,22 @@ def pipeline(
     except IOError as e:
         logger.error(f'Error writing file: {e}')
 
-    audio_path = f'{path}/audio.npy'
+    audio_path = f'{path}/audio.wav'
+
     logger.info(f'Write audio to {audio_path}...')
+    segment = create_audiosegment(au, sample_rate=sample_rate)
     try:
-        np.save(audio_path, au)
+        segment.export(audio_path, format='wav')
     except IOError as e:
         logger.error(f'Error writing file: {e}')
+
+
+def create_audiosegment(arr: np.ndarray, sample_rate: int) -> AudioSegment:
+    tmp = (arr * 2**31).astype(np.int32)
+    result = AudioSegment(
+        tmp.tobytes(),
+        frame_rate=sample_rate,
+        sample_width=tmp.dtype.itemsize,
+        channels=1,
+    )
+    return result
