@@ -6,7 +6,7 @@ import sys
 import click
 import numpy as np
 
-from just_another_music_generator.pipeline import generate_audio
+from just_another_music_generator.pipeline import pipeline
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -59,6 +59,10 @@ def cli():
     '--seed', default=-1, show_default=True,
     help='Random seed. If seed < 0, a fixed nonzero initial state is used.'
 )
+@click.option(
+    '--output-root', default='/tmp/just-another-music-generator', show_default=True,
+    help='Root of the output path.'
+)
 def generate(
     n_rules: int,
     tone_range: int,
@@ -70,28 +74,13 @@ def generate(
     scale: str,
     root_frequency: float,
     seed: int,
+    output_root: str,
 ):
     """
     Generates audio and saves to tmp file as Numpy array.
     """
 
-    params = f"Number of rules: {n_rules}\n" \
-        f"Tone range: {tone_range}\n" \
-        f"Sequence length: {sequence_length}\n" \
-        f"Skip: {skip}\n" \
-        f"Sample rate: {sample_rate}\n" \
-        f"Tone interval: {interval}\n" \
-        f"Tone duration: {tone_duration}\n" \
-        f"Scale: {scale}\n" \
-        f"Root frequency: {root_frequency}\n" \
-        f"Random seed: {seed}\n\n"
-
-    logger.info(params)
-
-    hashed = hex(abs(hash(params)))[2:]
-    logger.info(f"Unique hash of parameters: {hashed}")
-
-    au = generate_audio(
+    pipeline(
         n_rules,
         tone_range,
         sequence_length,
@@ -102,23 +91,8 @@ def generate(
         scale,
         root_frequency,
         seed,
+        output_root,
     )
-
-    # TODO: save as WAV file
-    # TODO: also save artifacts
-
-    path = f'/tmp/{hashed}'
-    if ~os.path.exists(path):
-        os.mkdir(path)
-
-    params_path = f'{path}/params.txt'
-    logger.info(f'Write parameters to {params_path}...')
-    with open(params_path, 'w+') as file:
-        file.write(params)
-
-    audio_path = f'{path}/audio.npy'
-    logger.info(f'Write audio to {audio_path}...')
-    np.save(audio_path, au)
 
 
 if __name__ == '__main__':

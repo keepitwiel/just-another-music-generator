@@ -1,8 +1,18 @@
+import logging
+import os
+import sys
+
 import numpy as np
 
 from just_another_music_generator.automata import generate_cellular_automaton
 from just_another_music_generator.sequence import Sequence
 from just_another_music_generator.tone import Tone
+
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+handler = logging.StreamHandler(sys.stdout)
+logger.addHandler(handler)
 
 
 MAJOR = [0, 2, 4, 5, 7, 9, 11, 12]
@@ -114,3 +124,72 @@ def generate_audio(
     print(f"Tones in sequence: {len(seq)}, duration: {seq.duration}")
     au = seq.render(sample_rate=sample_rate)
     return au
+
+
+def pipeline(
+    n_rules: int,
+    tone_range: int,
+    sequence_length: int,
+    skip: int,
+    sample_rate: int,
+    interval: float,
+    tone_duration: float,
+    scale: str,
+    root_frequency: float,
+    seed: int,
+    output_root: str,
+) -> None:
+    params = f"Number of rules: {n_rules}\n" \
+        f"Tone range: {tone_range}\n" \
+        f"Sequence length: {sequence_length}\n" \
+        f"Skip: {skip}\n" \
+        f"Sample rate: {sample_rate}\n" \
+        f"Tone interval: {interval}\n" \
+        f"Tone duration: {tone_duration}\n" \
+        f"Scale: {scale}\n" \
+        f"Root frequency: {root_frequency}\n" \
+        f"Random seed: {seed}\n" \
+        f"Output root path: {output_root}\n"
+
+    logger.info(params)
+
+    hashed = hex(abs(hash(params)))[2:]
+    logger.info(f"Unique hash of parameters: {hashed}")
+
+    au = generate_audio(
+        n_rules,
+        tone_range,
+        sequence_length,
+        skip,
+        sample_rate,
+        interval,
+        tone_duration,
+        scale,
+        root_frequency,
+        seed,
+    )
+
+    # TODO: save as WAV file
+    # TODO: also save artifacts
+
+    if not (os.path.exists(output_root)):
+        os.mkdir(output_root)
+
+    path = f'{output_root}/{hashed}'
+    if not (os.path.exists(path)):
+        os.mkdir(path)
+
+    params_path = f'{path}/params.txt'
+    logger.info(f'Write parameters to {params_path}...')
+    try:
+        with open(params_path, 'w+') as file:
+            file.write(params)
+    except IOError as e:
+        logger.error(f'Error writing file: {e}')
+
+    audio_path = f'{path}/audio.npy'
+    logger.info(f'Write audio to {audio_path}...')
+    try:
+        np.save(audio_path, au)
+    except IOError as e:
+        logger.error(f'Error writing file: {e}')
