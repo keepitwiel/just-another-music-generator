@@ -1,4 +1,4 @@
-from just_another_music_generator.pipeline import generate_audio
+from just_another_music_generator.generate_audio import generate_audio
 
 
 def test_integration():
