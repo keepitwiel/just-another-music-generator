@@ -43,6 +43,7 @@ class Automatone:
         :param root_frequency: frequency of the lowest note
         :param seed: random seed
         """
+        # TODO: move unnecessary parameters away from init (such as sample rate)
         self.n_rules = n_rules
         self.tone_range = tone_range
         self.sequence_length = sequence_length
@@ -53,9 +54,6 @@ class Automatone:
         self.scale = scale
         self.root_frequency = root_frequency
         self.seed = seed
-
-        self._activations_cached = None
-        self._sequence_cached = None
 
     def __str__(self):
         params = f"Number of rules: {self.n_rules}\n" \
@@ -72,39 +70,40 @@ class Automatone:
 
     @property
     def hash(self):
+        # todo: only hash relevant parameters
         m = md5()
         m.update(bytes(self.__str__(), 'utf-8'))
         return m.hexdigest()
 
     @property
     def _activations(self):
-        if self._activations_cached is None:
-            self._activations_cached = generate_activations(
+        result = generate_activations(
                 n_rules=self.n_rules,
                 tone_range=self.tone_range,
                 sequence_length=self.sequence_length,
                 skip=self.skip,
                 seed=self.seed,
             )
-        return self._activations_cached
+        return result
 
     @property
     def _sequence(self):
-        if self._sequence_cached is None:
-            self._sequence_cached = trigger_sounds(
-                self._activations,
-                interval=self.interval,
-                duration=self.tone_duration,
-                scale=self.scale,
-                root_frequency=self.root_frequency,
-            )
-        return self._sequence_cached
+        result = trigger_sounds(
+            self._activations,
+            interval=self.interval,
+            duration=self.tone_duration,
+            scale=self.scale,
+            root_frequency=self.root_frequency,
+        )
+        return result
 
     def render_audio(self, progress_bar: bool = False):
-        au = self._sequence.render(sample_rate=self.sample_rate, progress_bar=progress_bar)
+        sequence = self._sequence
+        au = sequence.render(sample_rate=self.sample_rate, progress_bar=progress_bar)
         return au
 
     def render_graph(self):
+        # TODO: add frequency labels on y axis
         fig, axes = plt.subplots(1, 1, figsize=(10, 6))
         img = self._activations.T
         axes.axis([0, img.shape[1], 0, img.shape[0]])
