@@ -9,7 +9,6 @@ KWARGS = {
     'tone_range': 24,
     'sequence_length': 256,
     'skip': 128,
-    'sample_rate': 96000,
     'interval': 0.125,
     'tone_duration': 0.05,
     'scale': 'pentatonic',
@@ -21,7 +20,7 @@ KWARGS = {
 def test_automatone_hash():
     obj = Automatone(**KWARGS)
     h = obj.hash
-    assert h == '8e7ec3a2e36f41513580f43c5d133125'
+    assert h == 'ceac467965836e1931e8b0cf9cd54189'
 
 
 def test_automatone_generate_sequence():
@@ -41,7 +40,7 @@ def test_automatone_generate_activations():
 
 def test_automatone_render_audio():
     obj = Automatone(**KWARGS)
-    au = obj.render_audio()
+    au = obj.render_audio(sample_rate=10000)
     assert type(au) == np.ndarray
     assert len(au) > 0
 

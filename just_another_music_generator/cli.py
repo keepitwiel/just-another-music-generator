@@ -86,7 +86,6 @@ def generate(
         tone_range,
         sequence_length,
         skip,
-        sample_rate,
         interval,
         tone_duration,
         scale,
@@ -95,7 +94,7 @@ def generate(
     )
 
     logger.info(automatone.__str__())
-    au = automatone.render_audio()
+    au = automatone.render_audio(sample_rate=sample_rate)
     graph = automatone.render_graph()
 
     logger.info(f'Write audio to file.'

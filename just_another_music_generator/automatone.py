@@ -22,7 +22,6 @@ class Automatone:
         tone_range: int,
         sequence_length: int,
         skip: int,
-        sample_rate: int,
         interval: float,
         tone_duration: float,
         scale: str,
@@ -36,7 +35,6 @@ class Automatone:
         :param tone_range: range of tones to use in the 12-tone system
         :param sequence_length: sequence length
         :param skip: number of tones to skip from start
-        :param sample_rate: number of audio samples per second
         :param interval: interval between tones in seconds
         :param tone_duration: tone duration in seconds
         :param scale: which musical scale to use. e.g. major, pentatonic
@@ -48,7 +46,6 @@ class Automatone:
         self.tone_range = tone_range
         self.sequence_length = sequence_length
         self.skip = skip
-        self.sample_rate = sample_rate
         self.interval = interval
         self.tone_duration = tone_duration
         self.scale = scale
@@ -60,7 +57,6 @@ class Automatone:
             f"Tone range: {self.tone_range}\n" \
             f"Sequence length: {self.sequence_length}\n" \
             f"Skip: {self.skip}\n" \
-            f"Sample rate: {self.sample_rate}\n" \
             f"Tone interval: {self.interval}\n" \
             f"Tone duration: {self.tone_duration}\n" \
             f"Scale: {self.scale}\n" \
@@ -86,6 +82,10 @@ class Automatone:
             )
         return result
 
+    # @property
+    # def _frequencies(self):
+
+
     @property
     def _sequence(self):
         result = trigger_sounds(
@@ -97,9 +97,9 @@ class Automatone:
         )
         return result
 
-    def render_audio(self, progress_bar: bool = False):
+    def render_audio(self, sample_rate: int, progress_bar: bool = False):
         sequence = self._sequence
-        au = sequence.render(sample_rate=self.sample_rate, progress_bar=progress_bar)
+        au = sequence.render(sample_rate=sample_rate, progress_bar=progress_bar)
         return au
 
     def render_graph(self):
