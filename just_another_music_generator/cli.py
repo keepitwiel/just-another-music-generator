@@ -6,7 +6,7 @@ import sys
 import click
 import numpy as np
 
-from just_another_music_generator.pipeline import pipeline
+from just_another_music_generator.pipeline import Automatone, write_audio
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -80,7 +80,8 @@ def generate(
     Generates audio and saves to tmp file as Numpy array.
     """
 
-    pipeline(
+    logger.info('generating Automatone object...')
+    automatone = Automatone(
         n_rules,
         tone_range,
         sequence_length,
@@ -91,8 +92,16 @@ def generate(
         scale,
         root_frequency,
         seed,
-        output_root,
     )
+
+    logger.info(automatone.__str__())
+    au = automatone.generate_audio()
+
+    logger.info(f'Write audio to file.'
+                f'Root dir: {output_root}'
+                f'Hash: {automatone.hash}')
+
+    write_audio(au, sample_rate, output_root, automatone.__str__(), automatone.hash)
 
 
 if __name__ == '__main__':

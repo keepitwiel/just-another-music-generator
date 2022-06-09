@@ -9,7 +9,7 @@ MAJOR = [0, 2, 4, 5, 7, 9, 11, 12]
 PENTATONIC = [0, 3, 5, 7, 10, 12]  # note: minor pentatonic
 
 
-def generate_activations(n_rules: int, tone_range: int, sequence_length: int, skip: int, seed: int):
+def generate_activations(n_rules: int, tone_range: int, sequence_length: int, skip: int, seed: int) -> np.ndarray:
     """
     Generates boolean matrices from 1-D cellular automata with randomly selected rules,
     and then performs the elemtwise "and" operation on all of them.
@@ -110,8 +110,6 @@ def generate_audio(
         skip=skip,
         seed=seed,
     )
-
-    # todo: return activations
 
     seq = trigger_sounds(activations, interval, tone_duration, scale, root_frequency)
     print(f"Tones in sequence: {len(seq)}, duration: {seq.duration}")
