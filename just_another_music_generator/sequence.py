@@ -54,13 +54,18 @@ class Sequence:
 
         return duration
 
-    def render(self, sample_rate: int, normalize: bool = True) -> np.ndarray:
+    def render(self, sample_rate: int, normalize: bool = True, progress_bar: bool = False) -> np.ndarray:
         n = np.ceil(sample_rate * self.duration).astype(int)
         result = np.zeros(n)
         t = np.linspace(0, self.duration, n)
         assert len(t) == len(result)
 
-        for i, tone in enumerate(tqdm(self.sequence)):
+        if progress_bar:
+            enum = tqdm(self.sequence)
+        else:
+            enum = self.sequence
+
+        for i, tone in enumerate(enum):
             i_start, i_end = find_bounds(tone, sample_rate)
             result[i_start:i_end] += tone.render(t[i_start:i_end])
 

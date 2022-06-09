@@ -7,6 +7,7 @@ from just_another_music_generator.tone import Tone
 
 MAJOR = [0, 2, 4, 5, 7, 9, 11, 12]
 PENTATONIC = [0, 3, 5, 7, 10, 12]  # note: minor pentatonic
+CHROMATIC = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 
 def generate_activations(n_rules: int, tone_range: int, sequence_length: int, skip: int, seed: int) -> np.ndarray:
@@ -74,44 +75,3 @@ def trigger_sounds(activations: np.ndarray, interval: float, duration: float, sc
                 )
                 s.add(tone)
     return s
-
-
-def generate_audio(
-    n_rules: int,
-    tone_range: int,
-    sequence_length: int,
-    skip: int,
-    sample_rate: int,
-    interval: float,
-    tone_duration: float,
-    scale: str,
-    root_frequency: float,
-    seed: int,
-):
-    """
-    Generates audio
-
-    :param n_rules: number of cellular automata to use
-    :param tone_range: range of tones to use in the 12-tone system
-    :param sequence_length: sequence length
-    :param skip: number of tones to skip from start
-    :param sample_rate: number of audio samples per second
-    :param interval: interval between tones in seconds
-    :param tone_duration: tone duration in seconds
-    :param scale: which musical scale to use. e.g. major, pentatonic
-    :param root_frequency: frequency of the lowest note
-    :param seed: random seed
-    :return: numpy array containing audio
-    """
-    activations = generate_activations(
-        n_rules=n_rules,
-        tone_range=tone_range,
-        sequence_length=sequence_length,
-        skip=skip,
-        seed=seed,
-    )
-
-    seq = trigger_sounds(activations, interval, tone_duration, scale, root_frequency)
-    print(f"Tones in sequence: {len(seq)}, duration: {seq.duration}")
-    au = seq.render(sample_rate=sample_rate)
-    return au

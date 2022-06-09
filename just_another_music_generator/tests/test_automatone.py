@@ -1,6 +1,6 @@
 import numpy as np
 
-from just_another_music_generator.pipeline import Automatone
+from just_another_music_generator.automatone import Automatone
 from just_another_music_generator.sequence import Sequence
 
 
@@ -18,20 +18,20 @@ KWARGS = {
 }
 
 
-def test_object_hash():
+def test_automatone_hash():
     obj = Automatone(**KWARGS)
     h = obj.hash
     assert h == '8e7ec3a2e36f41513580f43c5d133125'
 
 
-def test_object_generate_sequence():
+def test_automatone_generate_sequence():
     obj = Automatone(**KWARGS)
     sequence = obj._sequence
     assert type(sequence) == Sequence
     assert len(sequence) > 0
 
 
-def test_object_generate_image():
+def test_automatone_generate_activations():
     obj = Automatone(**KWARGS)
     img = obj._activations
     assert type(img) == np.ndarray
@@ -39,8 +39,14 @@ def test_object_generate_image():
     assert img.shape[1] == obj.tone_range
 
 
-def test_object_generate_audio():
+def test_automatone_render_audio():
     obj = Automatone(**KWARGS)
-    au = obj.generate_audio()
+    au = obj.render_audio()
     assert type(au) == np.ndarray
     assert len(au) > 0
+
+
+def test_automatone_render_graph():
+    obj = Automatone(**KWARGS)
+    graph = obj.render_graph()
+    assert True

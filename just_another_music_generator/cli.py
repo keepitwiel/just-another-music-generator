@@ -95,7 +95,8 @@ def generate(
     )
 
     logger.info(automatone.__str__())
-    au = automatone.generate_audio()
+    au = automatone.render_audio()
+    graph = automatone.render_graph()
 
     logger.info(f'Write audio to file.'
                 f'Root dir: {output_root}'

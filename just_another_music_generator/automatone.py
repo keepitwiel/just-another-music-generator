@@ -5,8 +5,9 @@ from hashlib import md5
 
 import numpy as np
 from pydub import AudioSegment
+from matplotlib import pyplot as plt
 
-from just_another_music_generator.generate_audio import trigger_sounds, generate_activations
+from just_another_music_generator.activations import trigger_sounds, generate_activations
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
@@ -99,11 +100,19 @@ class Automatone:
             )
         return self._sequence_cached
 
-    def generate_audio(self):
-        au = self._sequence.render(sample_rate=self.sample_rate)
+    def render_audio(self, progress_bar: bool = False):
+        au = self._sequence.render(sample_rate=self.sample_rate, progress_bar=progress_bar)
         return au
 
-# TODO: also save artifacts
+    def render_graph(self):
+        fig, axes = plt.subplots(1, 1, figsize=(10, 6))
+        img = self._activations.T
+        axes.axis([0, img.shape[1], 0, img.shape[0]])
+        axes.imshow(img)
+        axes.set_title(f'n_rules: {self.n_rules}, seed: {self.seed}')
+        axes.set_xlabel('Time step')
+        axes.set_ylabel('Tone')
+        return fig
 
 
 def write_audio(au, sample_rate, output_root, params, hashed) -> None:
