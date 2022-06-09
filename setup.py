@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='just-another-music-generator',
-    version='0.6.2',
+    version='0.7.0',
     packages=[
         'just_another_music_generator',
     ],

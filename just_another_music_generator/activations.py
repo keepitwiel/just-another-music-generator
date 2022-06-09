@@ -1,13 +1,10 @@
+from typing import List
+
 import numpy as np
 
 from just_another_music_generator.automata import generate_cellular_automaton
 from just_another_music_generator.sequence import Sequence
 from just_another_music_generator.tone import Tone
-
-
-MAJOR = [0, 2, 4, 5, 7, 9, 11, 12]
-PENTATONIC = [0, 3, 5, 7, 10, 12]  # note: minor pentatonic
-CHROMATIC = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
 
 def generate_activations(n_rules: int, tone_range: int, sequence_length: int, skip: int, seed: int) -> np.ndarray:
@@ -41,15 +38,16 @@ def generate_activations(n_rules: int, tone_range: int, sequence_length: int, sk
     return result
 
 
-def trigger_sounds(activations: np.ndarray, interval: float, duration: float, scale: str, root_frequency: float):
+def trigger_sounds(
+    activations: np.ndarray, interval: float, duration: float, frequencies: List[float],
+) -> Sequence:
     """
     given boolean activation matrix, trigger sounds where matrix == 1 into a Sequence object
 
     :param activations: boolean activation matrix
     :param interval: time between activations
     :param duration: tone duration in seconds
-    :param scale: musical scale
-    :param root_frequency: frequency of the lowest note
+    :param frequencies: list of frequencies to trigger
     :return: Sequence object
     """
     s = Sequence()
@@ -57,20 +55,22 @@ def trigger_sounds(activations: np.ndarray, interval: float, duration: float, sc
     for n in range(activations.shape[0]):
         for m in range(activations.shape[1]):
             if activations[n, m]:
-                if scale == 'major':
-                    octave = m // 8
-                    note_in_octave = MAJOR[m % 8]
-                elif scale == 'pentatonic':
-                    octave = m // 5
-                    note_in_octave = PENTATONIC[m % 5]
-                else:
-                    raise NotImplementedError
+                # if scale == 'major':
+                #     octave = m // 8
+                #     note_in_octave = MAJOR[m % 8]
+                # elif scale == 'pentatonic':
+                #     octave = m // 5
+                #     note_in_octave = PENTATONIC[m % 5]
+                # else:
+                #     raise NotImplementedError
+                #
+                # note = octave * 8 + note_in_octave
 
-                note = octave * 8 + note_in_octave
+                frequency = frequencies[m]
                 tone = Tone(
                     start_time=interval * n,
                     duration=duration,
-                    pitch=root_frequency * (2 ** (note / 12)),
+                    pitch=frequency, #root_frequency * (2 ** (note / 12)),
                     volume=0.5,
                 )
                 s.add(tone)

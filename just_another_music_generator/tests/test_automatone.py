@@ -1,6 +1,6 @@
 import numpy as np
 
-from just_another_music_generator.automatone import Automatone
+from just_another_music_generator.automatone import Automatone, MAJOR, PENTATONIC, CHROMATIC
 from just_another_music_generator.sequence import Sequence
 
 
@@ -15,6 +15,36 @@ KWARGS = {
     'root_frequency': 440,
     'seed': -1,
 }
+
+
+def test_automatone_frequencies_major():
+    obj = Automatone(**KWARGS)
+    obj.tone_range = 8
+    obj.scale = 'major'
+
+    expected = [440 * 2**(i/12) for i in MAJOR]
+    result = obj._frequencies
+    assert result == expected
+
+
+def test_automatone_frequencies_pentatonic():
+    obj = Automatone(**KWARGS)
+    obj.tone_range = 6
+    obj.scale = 'pentatonic'
+
+    expected = [440 * 2**(i/12) for i in PENTATONIC]
+    result = obj._frequencies
+    assert result == expected
+
+
+def test_automatone_frequencies_chromatic():
+    obj = Automatone(**KWARGS)
+    obj.tone_range = 13
+    obj.scale = 'chromatic'
+
+    expected = [440 * 2**(i/12) for i in CHROMATIC]
+    result = obj._frequencies
+    assert result == expected
 
 
 def test_automatone_hash():

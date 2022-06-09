@@ -15,6 +15,11 @@ handler = logging.StreamHandler(sys.stdout)
 logger.addHandler(handler)
 
 
+MAJOR = [0, 2, 4, 5, 7, 9, 11, 12]
+PENTATONIC = [0, 3, 5, 7, 10, 12]  # note: minor pentatonic
+CHROMATIC = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+
 class Automatone:
     def __init__(
         self,
@@ -82,9 +87,31 @@ class Automatone:
             )
         return result
 
-    # @property
-    # def _frequencies(self):
+    @property
+    def _frequencies(self):
+        # TODO: make this less verbose
 
+        result = []
+        for m in range(self.tone_range):
+            if self.scale == 'major':
+                octave = m // 7
+                note_in_octave = MAJOR[m % 7]
+                note = octave * 12 + note_in_octave
+            elif self.scale == 'pentatonic':
+                octave = m // 5
+                note_in_octave = PENTATONIC[m % 5]
+                note = octave * 12 + note_in_octave
+            elif self.scale == 'chromatic':
+                octave = m // 12
+                note_in_octave = CHROMATIC[m % 12]
+                note = octave * 12 + note_in_octave
+            else:
+                raise NotImplementedError
+
+            frequency = self.root_frequency * (2 ** (note / 12))
+            result.append(frequency)
+
+        return result
 
     @property
     def _sequence(self):
@@ -92,8 +119,7 @@ class Automatone:
             self._activations,
             interval=self.interval,
             duration=self.tone_duration,
-            scale=self.scale,
-            root_frequency=self.root_frequency,
+            frequencies=self._frequencies,
         )
         return result
 
@@ -103,15 +129,15 @@ class Automatone:
         return au
 
     def render_graph(self):
-        # TODO: add frequency labels on y axis
         fig, axes = plt.subplots(1, 1, figsize=(10, 6))
         img = self._activations.T
-        axes.axis([0, img.shape[1], 0, img.shape[0]])
+        freqs = self._frequencies
         axes.imshow(img)
-        axes.set_title(f'n_rules: {self.n_rules}, seed: {self.seed}')
+        axes.set_title(f'n_rules: {self.n_rules}, seed: {self.seed}, scale: {self.scale}')
         axes.set_xlabel('Time step')
-        axes.set_ylabel('Tone')
-        return fig
+        axes.set_ylabel('Pitch (Hz)')
+        axes.set_yticks(ticks=range(len(freqs)), labels=freqs)
+        return axes
 
 
 def write_audio(au, sample_rate, output_root, params, hashed) -> None:
