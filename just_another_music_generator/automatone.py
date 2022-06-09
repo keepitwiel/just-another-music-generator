@@ -28,6 +28,20 @@ class Automatone:
         root_frequency: float,
         seed: int,
     ):
+        """
+        An Automatone is a class that defines a piece of audio generated using cellular automata.
+
+        :param n_rules: number of cellular automata to use
+        :param tone_range: range of tones to use in the 12-tone system
+        :param sequence_length: sequence length
+        :param skip: number of tones to skip from start
+        :param sample_rate: number of audio samples per second
+        :param interval: interval between tones in seconds
+        :param tone_duration: tone duration in seconds
+        :param scale: which musical scale to use. e.g. major, pentatonic
+        :param root_frequency: frequency of the lowest note
+        :param seed: random seed
+        """
         self.n_rules = n_rules
         self.tone_range = tone_range
         self.sequence_length = sequence_length

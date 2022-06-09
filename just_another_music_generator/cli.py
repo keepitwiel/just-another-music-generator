@@ -6,7 +6,7 @@ import sys
 import click
 import numpy as np
 
-from just_another_music_generator.pipeline import Automatone, write_audio
+from just_another_music_generator.automatone import Automatone, write_audio
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
