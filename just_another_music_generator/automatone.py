@@ -14,11 +14,11 @@ logger.setLevel(logging.DEBUG)
 handler = logging.StreamHandler(sys.stdout)
 logger.addHandler(handler)
 
-
-MAJOR = [0, 2, 4, 5, 7, 9, 11, 12]
-PENTATONIC = [0, 3, 5, 7, 10, 12]  # note: minor pentatonic
-CHROMATIC = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
-
+SCALES = {
+    'major': [0, 2, 4, 5, 7, 9, 11, 12],
+    'pentatonic': [0, 3, 5, 7, 10, 12],  # note: minor pentatonic
+    'chromatic': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+}
 
 class Automatone:
     def __init__(
@@ -89,24 +89,19 @@ class Automatone:
 
     @property
     def _frequencies(self):
-        # TODO: make this less verbose
-
         result = []
+
+        try:
+            scale_idx = SCALES[self.scale]
+        except KeyError as e:
+            logger.error(f'Scale {self.scale} not found: {e}')
+            raise
+
         for m in range(self.tone_range):
-            if self.scale == 'major':
-                octave = m // 7
-                note_in_octave = MAJOR[m % 7]
-                note = octave * 12 + note_in_octave
-            elif self.scale == 'pentatonic':
-                octave = m // 5
-                note_in_octave = PENTATONIC[m % 5]
-                note = octave * 12 + note_in_octave
-            elif self.scale == 'chromatic':
-                octave = m // 12
-                note_in_octave = CHROMATIC[m % 12]
-                note = octave * 12 + note_in_octave
-            else:
-                raise NotImplementedError
+            n = len(scale_idx) - 1
+            octave = m // n
+            note_in_octave = scale_idx[m % n]
+            note = octave * 12 + note_in_octave
 
             frequency = self.root_frequency * (2 ** (note / 12))
             result.append(frequency)
@@ -131,7 +126,7 @@ class Automatone:
     def render_graph(self):
         fig, axes = plt.subplots(1, 1, figsize=(10, 6))
         img = self._activations.T
-        freqs = self._frequencies
+        freqs = [f'{freq:2.0f}' for freq in self._frequencies]
         axes.imshow(img)
         axes.set_title(f'n_rules: {self.n_rules}, seed: {self.seed}, scale: {self.scale}')
         axes.set_xlabel('Time step')

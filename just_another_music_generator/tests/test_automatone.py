@@ -1,6 +1,7 @@
 import numpy as np
+import pytest
 
-from just_another_music_generator.automatone import Automatone, MAJOR, PENTATONIC, CHROMATIC
+from just_another_music_generator.automatone import Automatone, SCALES
 from just_another_music_generator.sequence import Sequence
 
 
@@ -17,12 +18,19 @@ KWARGS = {
 }
 
 
+def test_automatone_frequencies_keyerror():
+    with pytest.raises(KeyError):
+        obj = Automatone(**KWARGS)
+        obj.scale = 'foo'
+        _ = obj._frequencies
+
+
 def test_automatone_frequencies_major():
     obj = Automatone(**KWARGS)
     obj.tone_range = 8
     obj.scale = 'major'
 
-    expected = [440 * 2**(i/12) for i in MAJOR]
+    expected = [440 * 2**(i/12) for i in SCALES['major']]
     result = obj._frequencies
     assert result == expected
 
@@ -32,7 +40,7 @@ def test_automatone_frequencies_pentatonic():
     obj.tone_range = 6
     obj.scale = 'pentatonic'
 
-    expected = [440 * 2**(i/12) for i in PENTATONIC]
+    expected = [440 * 2**(i/12) for i in SCALES['pentatonic']]
     result = obj._frequencies
     assert result == expected
 
@@ -42,7 +50,7 @@ def test_automatone_frequencies_chromatic():
     obj.tone_range = 13
     obj.scale = 'chromatic'
 
-    expected = [440 * 2**(i/12) for i in CHROMATIC]
+    expected = [440 * 2**(i/12) for i in SCALES['chromatic']]
     result = obj._frequencies
     assert result == expected
 
