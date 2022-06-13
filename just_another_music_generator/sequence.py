@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Tuple, List
 
 import numpy as np
 from tqdm import tqdm
@@ -32,14 +32,14 @@ class Sequence:
     def __init__(self) -> None:
         self.sequence = []
 
-    def add(self, tone: Tone) -> None:
+    def add(self, other: List) -> None:
         """
-        Add a tone to the sequence
-        :param tone: a tone
+        Add one or more tones to the sequence
+        :param other: a list of tones
 
         :return: None
         """
-        self.sequence.append(tone)
+        self.sequence += other
 
     def __len__(self):
         return len(self.sequence)

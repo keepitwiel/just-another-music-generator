@@ -20,7 +20,9 @@ def test_sequence():
 def test_add_tone():
     sequence = Sequence()
     sequence.add(
-        Tone(start_time=0, attack=0.0, decay=0.5, sustain_time=0.0, sustain_level=0.0, release=0.0, pitch=440, volume=0.5)
+        [
+            Tone(start_time=0, attack=0.0, decay=0.5, sustain_time=0.0, sustain_level=0.0, release=0.0, pitch=440, volume=0.5)
+        ]
     )
     assert len(sequence) == 1
 
@@ -28,7 +30,9 @@ def test_add_tone():
 def test_render():
     sequence = Sequence()
     sequence.add(
-        Tone(start_time=0, attack=0.0, decay=0.5, sustain_time=0.0, sustain_level=0.0, release=0.0, pitch=440, volume=0.5)
+        [
+            Tone(start_time=0, attack=0.0, decay=0.5, sustain_time=0.0, sustain_level=0.0, release=0.0, pitch=440, volume=0.5)
+        ]
     )
     sequence.render(sample_rate=110)
     assert True

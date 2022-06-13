@@ -12,7 +12,8 @@ class Tone:
         release: float,
         pitch: float,
         volume: float,
-        wave: str = 'square') -> None:
+        wave: str = 'square'
+    ) -> None:
         """
         Defines a sine carrier wave that is convoluted
         with another sine wave (the "envelope") between 0 and pi.

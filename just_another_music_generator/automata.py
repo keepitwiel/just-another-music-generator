@@ -20,7 +20,6 @@ def int_to_bin(rule):
 def step(x, rule_b):
     """Compute a single stet of an elementary cellular
     automaton."""
-    # TODO: implement wraparound
     # The columns contains the L, C, R values
     # of all cells.
     y = np.vstack((np.roll(x, 1), x,

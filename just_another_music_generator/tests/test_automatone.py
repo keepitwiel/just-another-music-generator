@@ -9,6 +9,7 @@ KWARGS = {
     'rules': [30],
     'tone_range': 24,
     'sequence_length': 256,
+    'sequence_offset': 0,
     'skip': 128,
     'interval': 0.125,
     'tone_duration': 0.05,

@@ -30,8 +30,12 @@ def cli():
     help='Sequence length expressed in number of tones.'
 )
 @click.option(
+    '--sequence-offset', default=0, show_default=True,
+    help='Number of time steps to skip from start.'
+)
+@click.option(
     '--skip', default=128, show_default=True,
-    help='Number of initial tones to skip.'
+    help='Number of initial rows in cellular automata to skip.'
 )
 @click.option(
     '--sample-rate', default=96000, show_default=True,
@@ -61,6 +65,7 @@ def generate(
     rules: str,
     tone_range: int,
     sequence_length: int,
+    sequence_offset: int,
     skip: int,
     sample_rate: int,
     interval: float,
@@ -80,6 +85,7 @@ def generate(
         rules,
         tone_range,
         sequence_length,
+        sequence_offset,
         skip,
         interval,
         tone_duration,

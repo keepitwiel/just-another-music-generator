@@ -30,6 +30,7 @@ class Automatone:
         rules: Union[int, List[int]],
         tone_range: int,
         sequence_length: int,
+        sequence_offset: int,
         skip: int,
         interval: float,
         tone_duration: float,
@@ -44,14 +45,13 @@ class Automatone:
             identified in the list.
         :param tone_range: range of tones to use in the 12-tone system
         :param sequence_length: sequence length
-        :param skip: number of tones to skip from start
+        :param sequence_offset: number of time steps to skip from start
+        :param skip: number of tones to skip from start of cellular automata calculation
         :param interval: interval between tones in seconds
         :param tone_duration: tone duration in seconds
         :param scale: which musical scale to use. e.g. major, pentatonic
         :param root_frequency: frequency of the lowest note
         """
-        # TODO: move unnecessary parameters away from init (such as sample rate)
-        # TODO: rethink randomness: only randomize rules
         if type(rules) == int:
             self.seed = np.random.randint(0, 2 ** 31)
             self.rules = np.random.choice(POSSIBLE_RULES, rules, replace=False)
@@ -61,6 +61,7 @@ class Automatone:
 
         self.tone_range = tone_range
         self.sequence_length = sequence_length
+        self.sequence_offset = sequence_offset
         self.skip = skip
         self.interval = interval
         self.tone_duration = tone_duration
@@ -81,7 +82,6 @@ class Automatone:
 
     @property
     def hash(self):
-        # todo: only hash relevant parameters
         m = md5()
         m.update(bytes(self.__str__(), 'utf-8'))
         return m.hexdigest()
@@ -123,6 +123,7 @@ class Automatone:
         result = trigger_sounds(
             self._activations,
             interval=self.interval,
+            sequence_offset=self.sequence_offset,
             duration=self.tone_duration,
             frequencies=self._frequencies,
         )
