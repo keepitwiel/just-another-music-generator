@@ -6,7 +6,7 @@ from just_another_music_generator.sequence import Sequence
 
 
 KWARGS = {
-    'n_rules': 5,
+    'rules': [30],
     'tone_range': 24,
     'sequence_length': 256,
     'skip': 128,
@@ -14,76 +14,88 @@ KWARGS = {
     'tone_duration': 0.05,
     'scale': 'pentatonic',
     'root_frequency': 440,
-    'seed': -1,
 }
 
 
 def test_automatone_frequencies_keyerror():
     with pytest.raises(KeyError):
-        obj = Automatone(**KWARGS)
-        obj.scale = 'foo'
-        _ = obj._frequencies
+        automatone = Automatone(**KWARGS)
+        automatone.scale = 'foo'
+        _ = automatone._frequencies
 
 
 def test_automatone_frequencies_major():
-    obj = Automatone(**KWARGS)
-    obj.tone_range = 8
-    obj.scale = 'major'
+    automatone = Automatone(**KWARGS)
+    automatone.tone_range = 8
+    automatone.scale = 'major'
 
     expected = [440 * 2**(i/12) for i in SCALES['major']]
-    result = obj._frequencies
+    result = automatone._frequencies
     assert result == expected
 
 
 def test_automatone_frequencies_pentatonic():
-    obj = Automatone(**KWARGS)
-    obj.tone_range = 6
-    obj.scale = 'pentatonic'
+    automatone = Automatone(**KWARGS)
+    automatone.tone_range = 6
+    automatone.scale = 'pentatonic'
 
     expected = [440 * 2**(i/12) for i in SCALES['pentatonic']]
-    result = obj._frequencies
+    result = automatone._frequencies
     assert result == expected
 
 
 def test_automatone_frequencies_chromatic():
-    obj = Automatone(**KWARGS)
-    obj.tone_range = 13
-    obj.scale = 'chromatic'
+    automatone = Automatone(**KWARGS)
+    automatone.tone_range = 13
+    automatone.scale = 'chromatic'
 
     expected = [440 * 2**(i/12) for i in SCALES['chromatic']]
-    result = obj._frequencies
+    result = automatone._frequencies
     assert result == expected
 
 
 def test_automatone_hash():
-    obj = Automatone(**KWARGS)
-    h = obj.hash
-    assert h == 'ceac467965836e1931e8b0cf9cd54189'
+    automatone = Automatone(**KWARGS)
+    h = automatone.hash
+    assert h == '5bee22dda0f7dddb6e7fd4d52f4422f4'
 
 
 def test_automatone_generate_sequence():
-    obj = Automatone(**KWARGS)
-    sequence = obj._sequence
+    automatone = Automatone(**KWARGS)
+    sequence = automatone._sequence
     assert type(sequence) == Sequence
     assert len(sequence) > 0
 
 
 def test_automatone_generate_activations():
-    obj = Automatone(**KWARGS)
-    img = obj._activations
+    automatone = Automatone(**KWARGS)
+    img = automatone._activations
     assert type(img) == np.ndarray
-    assert img.shape[0] == obj.sequence_length
-    assert img.shape[1] == obj.tone_range
+    assert img.shape[0] == automatone.sequence_length
+    assert img.shape[1] == automatone.tone_range
 
 
 def test_automatone_render_audio():
-    obj = Automatone(**KWARGS)
-    au = obj.render_audio(sample_rate=10000)
+    automatone = Automatone(**KWARGS)
+    au = automatone.render_audio(sample_rate=10000)
     assert type(au) == np.ndarray
     assert len(au) > 0
 
 
 def test_automatone_render_graph():
-    obj = Automatone(**KWARGS)
-    graph = obj.render_graph()
+    automatone = Automatone(**KWARGS)
+    automatone.render_graph()
     assert True
+
+
+def test_automatone_select_rules_nonrandom():
+    automatone = Automatone(**KWARGS)
+    assert len(automatone.rules) == 1
+    np.testing.assert_array_equal(automatone.rules, np.array([30]))
+
+
+def test_automatone_select_rules_random():
+    kwargs = KWARGS.copy()
+    kwargs['rules'] = np.random.randint(2, 100)
+    automatone = Automatone(**kwargs)
+    assert len(automatone.rules) == kwargs['rules']

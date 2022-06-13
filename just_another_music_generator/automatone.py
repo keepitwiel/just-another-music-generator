@@ -1,3 +1,4 @@
+from typing import List, Union
 import logging
 import os
 import sys
@@ -20,10 +21,13 @@ SCALES = {
     'chromatic': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
 }
 
+POSSIBLE_RULES = [i for i in range(1, 255)]
+
+
 class Automatone:
     def __init__(
         self,
-        n_rules: int,
+        rules: Union[int, List[int]],
         tone_range: int,
         sequence_length: int,
         skip: int,
@@ -31,12 +35,13 @@ class Automatone:
         tone_duration: float,
         scale: str,
         root_frequency: float,
-        seed: int,
     ):
         """
         An Automatone is a class that defines a piece of audio generated using cellular automata.
 
-        :param n_rules: number of cellular automata to use
+        :param rules: fundamental cellular automata rules to use. If this parameter is an integer,
+            then this number of rules will be randomly chosen; if it is a list, we use the rules
+            identified in the list.
         :param tone_range: range of tones to use in the 12-tone system
         :param sequence_length: sequence length
         :param skip: number of tones to skip from start
@@ -44,10 +49,16 @@ class Automatone:
         :param tone_duration: tone duration in seconds
         :param scale: which musical scale to use. e.g. major, pentatonic
         :param root_frequency: frequency of the lowest note
-        :param seed: random seed
         """
         # TODO: move unnecessary parameters away from init (such as sample rate)
-        self.n_rules = n_rules
+        # TODO: rethink randomness: only randomize rules
+        if type(rules) == int:
+            self.seed = np.random.randint(0, 2 ** 31)
+            self.rules = np.random.choice(POSSIBLE_RULES, rules, replace=False)
+        elif type(rules) == list:
+            self.rules = rules
+            self.seed = -1
+
         self.tone_range = tone_range
         self.sequence_length = sequence_length
         self.skip = skip
@@ -55,18 +66,17 @@ class Automatone:
         self.tone_duration = tone_duration
         self.scale = scale
         self.root_frequency = root_frequency
-        self.seed = seed
 
     def __str__(self):
-        params = f"Number of rules: {self.n_rules}\n" \
+        params = f"Selected rules: {self.rules}\n" \
+            f"Random seed: {self.seed}\n" \
             f"Tone range: {self.tone_range}\n" \
             f"Sequence length: {self.sequence_length}\n" \
             f"Skip: {self.skip}\n" \
             f"Tone interval: {self.interval}\n" \
             f"Tone duration: {self.tone_duration}\n" \
             f"Scale: {self.scale}\n" \
-            f"Root frequency: {self.root_frequency}\n" \
-            f"Random seed: {self.seed}\n"
+            f"Root frequency: {self.root_frequency}\n"
         return params
 
     @property
@@ -79,16 +89,16 @@ class Automatone:
     @property
     def _activations(self):
         result = generate_activations(
-                n_rules=self.n_rules,
-                tone_range=self.tone_range,
-                sequence_length=self.sequence_length,
-                skip=self.skip,
-                seed=self.seed,
-            )
+            rules=self.rules,
+            tone_range=self.tone_range,
+            sequence_length=self.sequence_length,
+            skip=self.skip,
+        )
         return result
 
     @property
     def _frequencies(self):
+        # TODO: include 'A4, A#4, B4 etc. notation'
         result = []
 
         try:
@@ -128,10 +138,13 @@ class Automatone:
         img = self._activations.T
         freqs = [f'{freq:2.0f}' for freq in self._frequencies]
         axes.imshow(img)
-        axes.set_title(f'n_rules: {self.n_rules}, seed: {self.seed}, scale: {self.scale}')
+        axes.set_title(f'rules: {self.rules}, seed: {self.seed}, scale: {self.scale}')
         axes.set_xlabel('Time step')
         axes.set_ylabel('Pitch (Hz)')
-        axes.set_yticks(ticks=range(len(freqs)), labels=freqs)
+        step_size = 1
+        if len(freqs) >= 10:
+            step_size = len(freqs) // 5
+        axes.set_yticks(ticks=range(0, len(freqs), step_size), labels=freqs[::step_size])
         return axes
 
 

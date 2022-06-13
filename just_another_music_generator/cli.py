@@ -1,10 +1,7 @@
-import json
 import logging
-import os
 import sys
 
 import click
-import numpy as np
 
 from just_another_music_generator.automatone import Automatone, write_audio
 
@@ -18,10 +15,11 @@ logger.addHandler(handler)
 def cli():
     pass
 
+
 @cli.command()
 @click.option(
-    '--n-rules', default=5, show_default=True,
-    help='Number of cellular automata to use.'
+    '--rules', default='[30]', show_default=True,
+    help='Fundamental cellular automata rules to use. If value is integer, randomly select that number of rules.'
 )
 @click.option(
     '--tone-range', default=24, show_default=True,
@@ -56,15 +54,11 @@ def cli():
     help='frequency of the lowest note'
 )
 @click.option(
-    '--seed', default=-1, show_default=True,
-    help='Random seed. If seed < 0, a fixed nonzero initial state is used.'
-)
-@click.option(
     '--output-root', default='/tmp/just-another-music-generator', show_default=True,
     help='Root of the output path.'
 )
 def generate(
-    n_rules: int,
+    rules: str,
     tone_range: int,
     sequence_length: int,
     skip: int,
@@ -73,7 +67,6 @@ def generate(
     tone_duration: float,
     scale: str,
     root_frequency: float,
-    seed: int,
     output_root: str,
 ):
     """
@@ -81,8 +74,10 @@ def generate(
     """
 
     logger.info('generating Automatone object...')
+    rules = parse_rules(rules)
+
     automatone = Automatone(
-        n_rules,
+        rules,
         tone_range,
         sequence_length,
         skip,
@@ -90,18 +85,27 @@ def generate(
         tone_duration,
         scale,
         root_frequency,
-        seed,
     )
 
     logger.info(automatone.__str__())
     au = automatone.render_audio(sample_rate=sample_rate)
-    graph = automatone.render_graph()
 
     logger.info(f'Write audio to file.'
                 f'Root dir: {output_root}'
                 f'Hash: {automatone.hash}')
 
     write_audio(au, sample_rate, output_root, automatone.__str__(), automatone.hash)
+
+
+def parse_rules(rules):
+    rules = rules.strip('[]')
+    rules = rules.split(',')
+    try:
+        rules = [int(rule) for rule in rules]
+    except ValueError:
+        raise 'Invalid parameter passed: rules. "rules" should be either an ' \
+              'integer or a list of integers separated by commas (e.g. "1,2,3,5,8")'
+    return rules
 
 
 if __name__ == '__main__':
