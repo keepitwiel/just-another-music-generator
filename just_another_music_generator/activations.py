@@ -28,8 +28,8 @@ def generate_activations(rules: np.ndarray, tone_range: int, sequence_length: in
         )
         for rule in rules
     ]
-    #result = np.prod(np.stack(result, axis=2), axis=2)
-    result = np.sum(np.stack(result, axis=2), axis=2)
+    result = np.prod(np.stack(result, axis=2), axis=2)
+    #result = np.sum(np.stack(result, axis=2), axis=2)
     return result
 
 
@@ -55,7 +55,7 @@ def trigger_sounds(
                     start_time=interval * n,
                     duration=duration,
                     pitch=frequency,
-                    volume=activations[n, m],
+                    volume=0.5, #activations[n, m],
                 )
                 s.add(tone)
     return s

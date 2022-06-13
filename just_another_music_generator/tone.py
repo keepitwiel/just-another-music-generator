@@ -16,6 +16,7 @@ class Tone:
         self.duration = duration
         self.pitch = pitch
         self.volume = volume
+        self.wave = 'square'
 
     def render(self, t: np.ndarray) -> np.ndarray:
         """
@@ -28,9 +29,14 @@ class Tone:
 
     def render_array(self, t):
         u = t - self.start_time
-        envelope_phase = u / self.duration * np.pi
-        envelope = ((0 < u) & (u < self.duration)) * np.sin(envelope_phase)
+        # envelope_phase = u / self.duration * np.pi
+        envelope = ((0 < u) & (u < self.duration)) * 1.0 #* np.sin(envelope_phase)
         tone_phase = u * self.pitch * 2 * np.pi
-        tone = np.sin(tone_phase)
+        if self.wave == 'sin':
+            tone = np.sin(tone_phase)
+        elif self.wave == 'square':
+            tone = np.sign(np.sin(tone_phase))
+        else:
+            raise NotImplementedError
         x = self.volume * envelope * tone
         return x
