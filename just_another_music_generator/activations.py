@@ -53,9 +53,13 @@ def trigger_sounds(
                 frequency = frequencies[m]
                 tone = Tone(
                     start_time=interval * n,
-                    duration=duration,
+                    attack=0,
+                    decay=duration,
+                    sustain_time=0,
+                    sustain_level=0,
+                    release=0,
                     pitch=frequency,
-                    volume=0.5, #activations[n, m],
+                    volume=0.5,
                 )
                 s.add(tone)
     return s

@@ -20,7 +20,7 @@ def find_bounds(tone: Tone, sample_rate: int) -> Tuple[int, int]:
     and sample_rate = 10000, then i_start = 10000 and i_end = 15001
     """
     t_start = tone.start_time
-    t_end = tone.start_time + tone.duration
+    t_end = tone.start_time + tone._duration
 
     i_start = np.floor(t_start * sample_rate).astype(int)
     i_end = np.ceil(t_end * sample_rate).astype(int)
@@ -48,7 +48,7 @@ class Sequence:
     def duration(self) -> float:
         duration = 1
         for tone in self.sequence:
-            d = tone.start_time + tone.duration
+            d = tone.start_time + tone._duration
             if d > duration:
                 duration = d
 
