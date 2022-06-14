@@ -1,4 +1,5 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 from just_another_music_generator.automatone import Automatone
 from just_another_music_generator.sequence import Sequence
@@ -18,6 +19,13 @@ class Composition:
 
         audio = sequence.render(sample_rate=sample_rate, normalize=normalize)
         return audio
+
+    def activations_per_automatone(self):
+        n = len(self.automatones)
+        fig, axes = plt.subplots(n, 1)
+        for i, automatone in enumerate(self.automatones):
+            axes[i] = automatone.render_graph()
+        return axes
 
     def activations(self):
         activations = []
