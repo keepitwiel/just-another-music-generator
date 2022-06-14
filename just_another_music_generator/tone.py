@@ -140,5 +140,5 @@ class Tone:
         left = np.sin((1 - self._pan) * np.pi / 2) * x
         right = np.sin(self._pan * np.pi / 2) * x
 
-        result = np.concatenate([left * x, right * x], axis=1)
+        result = np.concatenate([left, right], axis=1)
         return result

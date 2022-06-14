@@ -26,11 +26,12 @@ def write_audio(au, sample_rate, output_path) -> None:
 
 
 def create_audiosegment(arr: np.ndarray, sample_rate: int) -> AudioSegment:
+    assert arr.shape[1] == 2
     tmp = (arr * 2**31).astype(np.int32)
     result = AudioSegment(
         tmp.tobytes(),
         frame_rate=sample_rate,
         sample_width=tmp.dtype.itemsize,
-        channels=1,
+        channels=2,
     )
     return result
