@@ -1,6 +1,10 @@
 import numpy as np
 
-from just_another_music_generator.automata import int_to_bin, step, generate_cellular_automaton
+from just_another_music_generator.automata import (
+    int_to_bin,
+    step,
+    generate_cellular_automaton,
+)
 
 
 def test_int_to_bin():

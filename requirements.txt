@@ -6,3 +6,7 @@ ffmpeg
 ffprobe
 click
 tqdm
+pre-commit
+black
+mypy
+flake8

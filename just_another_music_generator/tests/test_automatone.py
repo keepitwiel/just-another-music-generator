@@ -6,31 +6,31 @@ from just_another_music_generator.sequence import Sequence
 
 
 KWARGS = {
-    'rules': [30],
-    'tone_range': 24,
-    'sequence_length': 256,
-    'sequence_offset': 0,
-    'skip': 128,
-    'interval': 0.125,
-    'tone_duration': 0.05,
-    'scale': 'pentatonic',
-    'root_frequency': 440,
+    "rules": [30],
+    "tone_range": 24,
+    "sequence_length": 256,
+    "sequence_offset": 0,
+    "skip": 128,
+    "interval": 0.125,
+    "tone_duration": 0.05,
+    "scale": "pentatonic",
+    "root_frequency": 440,
 }
 
 
 def test_automatone_frequencies_keyerror():
     with pytest.raises(KeyError):
         automatone = Automatone(**KWARGS)
-        automatone.scale = 'foo'
+        automatone.scale = "foo"
         _ = automatone._frequencies
 
 
 def test_automatone_frequencies_major():
     automatone = Automatone(**KWARGS)
     automatone.tone_range = 8
-    automatone.scale = 'major'
+    automatone.scale = "major"
 
-    expected = [440 * 2**(i/12) for i in SCALES['major']]
+    expected = [440 * 2 ** (i / 12) for i in SCALES["major"]]
     result = automatone._frequencies
     assert result == expected
 
@@ -38,9 +38,9 @@ def test_automatone_frequencies_major():
 def test_automatone_frequencies_pentatonic():
     automatone = Automatone(**KWARGS)
     automatone.tone_range = 6
-    automatone.scale = 'pentatonic'
+    automatone.scale = "pentatonic"
 
-    expected = [440 * 2**(i/12) for i in SCALES['pentatonic']]
+    expected = [440 * 2 ** (i / 12) for i in SCALES["pentatonic"]]
     result = automatone._frequencies
     assert result == expected
 
@@ -48,9 +48,9 @@ def test_automatone_frequencies_pentatonic():
 def test_automatone_frequencies_chromatic():
     automatone = Automatone(**KWARGS)
     automatone.tone_range = 13
-    automatone.scale = 'chromatic'
+    automatone.scale = "chromatic"
 
-    expected = [440 * 2**(i/12) for i in SCALES['chromatic']]
+    expected = [440 * 2 ** (i / 12) for i in SCALES["chromatic"]]
     result = automatone._frequencies
     assert result == expected
 
@@ -58,7 +58,7 @@ def test_automatone_frequencies_chromatic():
 def test_automatone_hash():
     automatone = Automatone(**KWARGS)
     h = automatone.hash
-    assert h == '5bee22dda0f7dddb6e7fd4d52f4422f4'
+    assert h == "5bee22dda0f7dddb6e7fd4d52f4422f4"
 
 
 def test_automatone_generate_sequence():
@@ -97,6 +97,6 @@ def test_automatone_select_rules_nonrandom():
 
 def test_automatone_select_rules_random():
     kwargs = KWARGS.copy()
-    kwargs['rules'] = np.random.randint(2, 100)
+    kwargs["rules"] = np.random.randint(2, 100)
     automatone = Automatone(**kwargs)
-    assert len(automatone.rules) == kwargs['rules']
+    assert len(automatone.rules) == kwargs["rules"]

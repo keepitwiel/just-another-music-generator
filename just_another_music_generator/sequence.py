@@ -8,8 +8,8 @@ from just_another_music_generator.tone import Tone
 
 def find_bounds(tone: Tone, sample_rate: int) -> Tuple[int, int]:
     """
-    Given a Tone object, find the global indices of the first and last sample of that tone
-    (i_start and i_end).
+    Given a Tone object, find the global indices of the first and last sample
+    of that tone (i_start and i_end).
 
     :param tone: Tone object
     :param t: array containing the timestamps of all samples
@@ -54,7 +54,12 @@ class Sequence:
 
         return duration
 
-    def render(self, sample_rate: int, normalize: bool = True, progress_bar: bool = False) -> np.ndarray:
+    def render(
+        self,
+        sample_rate: int,
+        normalize: bool = True,
+        progress_bar: bool = False,
+    ) -> np.ndarray:
         n = np.ceil(sample_rate * self.duration).astype(int)
         result = np.zeros(n)
         t = np.linspace(0, self.duration, n)

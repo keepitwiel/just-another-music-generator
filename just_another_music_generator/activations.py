@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 
 import numpy as np
 
@@ -7,10 +7,13 @@ from just_another_music_generator.sequence import Sequence
 from just_another_music_generator.tone import Tone
 
 
-def generate_activations(rules: List[int], tone_range: int, sequence_length: int, skip: int) -> np.ndarray:
+def generate_activations(
+    rules: List[int], tone_range: int, sequence_length: int, skip: int
+) -> np.ndarray[Any, Any]:
     """
-    Generates boolean matrices from 1-D cellular automata with randomly selected rules,
-    and then performs the elemtwise "and" operation on all of them.
+    Generates boolean matrices from 1-D cellular automata with
+    randomly selected rules, and then performs the elemtwise "and"
+    operation on all of them.
 
     The resulting matrix indicates instrument activations.
 
@@ -23,7 +26,10 @@ def generate_activations(rules: List[int], tone_range: int, sequence_length: int
     # we exclude rule 0 and 255, because they produce all 0s or all 1s
     result = [
         generate_cellular_automaton(
-            rule=rule, size=tone_range, steps=sequence_length, skip=skip,
+            rule=rule,
+            size=tone_range,
+            steps=sequence_length,
+            skip=skip,
         )
         for rule in rules
     ]
@@ -32,10 +38,15 @@ def generate_activations(rules: List[int], tone_range: int, sequence_length: int
 
 
 def trigger_sounds(
-    activations: np.ndarray, interval: float, sequence_offset: int, duration: float, frequencies: List[float],
+    activations: np.ndarray,
+    interval: float,
+    sequence_offset: int,
+    duration: float,
+    frequencies: List[float],
 ) -> Sequence:
     """
-    given boolean activation matrix, trigger sounds where matrix == 1 into a Sequence object
+    given boolean activation matrix, trigger sounds where
+    matrix == 1 into a Sequence object
 
     :param activations: boolean activation matrix
     :param interval: time between activations

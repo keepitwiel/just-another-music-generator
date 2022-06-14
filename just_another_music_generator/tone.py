@@ -12,7 +12,7 @@ class Tone:
         release: float,
         pitch: float,
         volume: float,
-        wave: str = 'square'
+        wave: str = "square",
     ) -> None:
         """
         Defines a sine carrier wave that is convoluted
@@ -40,14 +40,18 @@ class Tone:
     def _duration(self):
         return self.attack + self.decay + self.sustain_time + self.release
 
-    # def render(self, t: np.ndarray) -> np.ndarray:
-    #     """
-    #     renders tone value at given time
-    #
-    #     :param t: array of timestamps at which to render the tone
-    #     :return: rendered value
-    #     """
-    #     return self.render_array(t)
+    def _calculate_envelope(self, t):
+        """
+        Given an array with time stamps, calculate the
+        loudness envelope of the tone for each time stamp.
+
+        :param t: array with time stamps
+        :return: envelope value for each time stamp
+        """
+        result = (0 < t) & (t < self._duration)
+
+        # TODO: ADSR
+        return result * (1 - t / self._duration)
 
     def render(self, t: np.ndarray) -> np.ndarray:
         """
@@ -56,21 +60,21 @@ class Tone:
         :param t: array of timestamps at which to render the tone
         :return: rendered value
         """
+
+        # shift time stamps to start of tone
         u = t - self.start_time
 
-        envelope = ((0 < u) & (u < self._duration))
-
-        # TODO: fix this with ADSR
-        envelope = envelope * (1 - u / self._duration)
+        envelope = self._calculate_envelope(u)
 
         carrier_phase = u * self.pitch * 2 * np.pi
-        if self.wave == 'sin':
+        if self.wave == "sin":
             carrier = np.sin(carrier_phase)
-        elif self.wave == 'square':
+        elif self.wave == "square":
             carrier = np.sign(np.sin(carrier_phase))
         else:
             raise NotImplementedError
 
         noise = np.random.normal(0, 1, len(u))
-        x = self.volume * envelope * ((1 - self.noise) * carrier + self.noise * noise)
+        mixed = ((1 - self.noise) * carrier + self.noise * noise,)
+        x = self.volume * envelope * mixed
         return x
