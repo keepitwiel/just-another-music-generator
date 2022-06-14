@@ -8,7 +8,7 @@ runner = CliRunner()
 
 def test_parse_rules_ok_1():
     result = parse_rules("1")
-    assert result == 1
+    assert result == [1]
 
 
 def test_parse_rules_ok_2():

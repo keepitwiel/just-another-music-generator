@@ -75,6 +75,6 @@ class Tone:
             raise NotImplementedError
 
         noise = np.random.normal(0, 1, len(u))
-        mixed = ((1 - self.noise) * carrier + self.noise * noise,)
+        mixed = (1 - self.noise) * carrier + self.noise * noise
         x = self.volume * envelope * mixed
         return x
