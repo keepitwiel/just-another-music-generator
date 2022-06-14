@@ -37,6 +37,7 @@ class Automatone:
         tone_duration: float,
         scale: str,
         root_frequency: float,
+        pan: float,
     ):
         """
         An Automatone is a class that defines a piece of audio

@@ -13,6 +13,7 @@ def test_tone():
         release_time=0.0,
         pitch=440,
         volume=0.5,
+        pan=0.5,
     )
     assert True
 
@@ -27,12 +28,16 @@ def test_tone_render_array():
         release_time=0.1,
         pitch=440,
         volume=0.5,
+        pan=0.5,
     )
     t = np.linspace(-1, 2, 101)
     x = tone.render(t)
-    assert len(x) == len(t)
-    assert x[0] == 0
-    assert x[-1] == 0
+    assert x.shape[0] == len(t)
+    assert x.shape[1] == 2
+    assert x[0, 0] == 0
+    assert x[-1, 0] == 0
+    assert x[0, 1] == 0
+    assert x[-1, 1] == 0
 
 
 def test_interpolate():
@@ -71,6 +76,7 @@ def test_tone_envelope():
         release_time=0.4,
         pitch=440,
         volume=0.5,
+        pan=0.5,
     )
     t = np.linspace(0, 1, 101)
     envelope = tone._calculate_envelope(t=t)

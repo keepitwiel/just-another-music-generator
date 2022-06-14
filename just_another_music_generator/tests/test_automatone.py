@@ -15,6 +15,7 @@ KWARGS = {
     "tone_duration": 0.05,
     "scale": "pentatonic",
     "root_frequency": 440,
+    "pan": 0.5,
 }
 
 

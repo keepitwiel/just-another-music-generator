@@ -12,6 +12,7 @@ def test_find_bounds():
         release_time=0.0,
         pitch=440,
         volume=0.5,
+        pan=0.5,
     )
     sample_rate = 1000
     expected = (1000, 1501)
@@ -39,6 +40,7 @@ def test_add_tone():
                 release_time=0.0,
                 pitch=440,
                 volume=0.5,
+                pan=0.5,
             )
         ]
     )
@@ -58,6 +60,7 @@ def test_render():
                 release_time=0.0,
                 pitch=440,
                 volume=0.5,
+                pan=0.5,
             )
         ]
     )

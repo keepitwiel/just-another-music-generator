@@ -70,6 +70,7 @@ def trigger_sounds(
                     release_time=0,
                     pitch=frequency,
                     volume=0.5,
+                    pan=0.5,
                 )
                 s.add([tone])
     return s

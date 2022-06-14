@@ -30,7 +30,7 @@ def find_bounds(tone: Tone, sample_rate: int) -> Tuple[int, int]:
 
 class Sequence:
     def __init__(self) -> None:
-        self.sequence = []
+        self.sequence: List[Tone] = []
 
     def add(self, other: List) -> None:
         """
@@ -61,7 +61,7 @@ class Sequence:
         progress_bar: bool = False,
     ) -> np.ndarray:
         n = np.ceil(sample_rate * self.duration).astype(int)
-        result = np.zeros(n)
+        result = np.zeros((n, 2))
         t = np.linspace(0, self.duration, n)
         assert len(t) == len(result)
 
@@ -72,7 +72,7 @@ class Sequence:
 
         for i, tone in enumerate(enum):
             i_start, i_end = find_bounds(tone, sample_rate)
-            result[i_start:i_end] += tone.render(t[i_start:i_end])
+            result[i_start:i_end, :] += tone.render(t[i_start:i_end])
 
         if normalize:
             minimum = np.min(result)

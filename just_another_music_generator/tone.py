@@ -37,6 +37,7 @@ class Tone:
         release_time: float,
         pitch: float,
         volume: float,
+        pan: float,
         wave: str = "square",
     ) -> None:
         """
@@ -51,6 +52,7 @@ class Tone:
         self.start_time = start_time
         self.pitch = pitch
         self.volume = volume
+        self.pan = pan
         self.wave = wave
 
         self.attack = attack_time
@@ -67,7 +69,11 @@ class Tone:
         result = result + self.sustain_time + self.release_time
         return result
 
-    def _calculate_envelope(self, t):
+    @property
+    def _pan(self):
+        return np.clip(self.pan, 0, 1)
+
+    def _calculate_envelope(self, t: np.ndarray) -> np.ndarray:
         """
         Given an array with time stamps, calculate the
         loudness envelope of the tone for each time stamp.
@@ -128,4 +134,11 @@ class Tone:
         noise = np.random.normal(0, 1, len(u))
         mixed = (1 - self.noise) * carrier + self.noise * noise
         x = self.volume * envelope * mixed
-        return x
+        x = x.reshape(-1, 1)
+
+        # sine law panning
+        left = np.sin((1 - self._pan) * np.pi / 2) * x
+        right = np.sin(self._pan * np.pi / 2) * x
+
+        result = np.concatenate([left * x, right * x], axis=1)
+        return result

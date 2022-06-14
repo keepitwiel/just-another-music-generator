@@ -82,6 +82,12 @@ def cli():
     help="frequency of the lowest note",
 )
 @click.option(
+    "--pan",
+    default=0.5,
+    show_default=True,
+    help="Stereo pan (0.0 = left, 0.5 = center, 1.0 = right)",
+)
+@click.option(
     "--output-root",
     default="/tmp/just-another-music-generator",
     show_default=True,
@@ -98,6 +104,7 @@ def generate(
     tone_duration: float,
     scale: str,
     root_frequency: float,
+    pan: float,
     output_root: str,
 ):
     """
@@ -117,6 +124,7 @@ def generate(
         tone_duration,
         scale,
         root_frequency,
+        pan,
     )
 
     logger.info(automatone.__str__())
