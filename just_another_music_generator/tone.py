@@ -1,15 +1,40 @@
 import numpy as np
 
 
+def interpolate(
+    t: np.ndarray,
+    t0: float,
+    t1: float,
+    level0: float,
+    level1: float,
+) -> np.ndarray:
+    """
+    Calculates interpolated envelope between two times
+    given a start and end level.
+
+    :param t: time stamps
+    :param t0: start time
+    :param t1: end time
+    :param level0: start level
+    :param level1: end level
+    :return: array containing interpolated envelope
+    """
+    envelope = ((t0 <= t) * (t < t1)).astype(np.float64)
+    if t1 > t0:
+        tt = (t - t0) / (t1 - t0)
+        envelope *= level1 * tt + level0 * (1 - tt)
+    return envelope
+
+
 class Tone:
     def __init__(
         self,
         start_time: float,
-        attack: float,
-        decay: float,
+        attack_time: float,
+        decay_time: float,
         sustain_time: float,
         sustain_level: float,
-        release: float,
+        release_time: float,
         pitch: float,
         volume: float,
         wave: str = "square",
@@ -28,17 +53,19 @@ class Tone:
         self.volume = volume
         self.wave = wave
 
-        self.attack = attack
-        self.decay = decay
+        self.attack = attack_time
+        self.decay_time = decay_time
         self.sustain_time = sustain_time
         self.sustain_level = sustain_level
-        self.release = release
+        self.release_time = release_time
 
         self.noise = 0.1
 
     @property
     def _duration(self):
-        return self.attack + self.decay + self.sustain_time + self.release
+        result = self.attack + self.decay_time
+        result = result + self.sustain_time + self.release_time
+        return result
 
     def _calculate_envelope(self, t):
         """
@@ -48,10 +75,34 @@ class Tone:
         :param t: array with time stamps
         :return: envelope value for each time stamp
         """
-        result = (0 < t) & (t < self._duration)
 
-        # TODO: ADSR
-        return result * (1 - t / self._duration)
+        result = np.zeros(t.shape)
+
+        # calculate ADSR times
+        t0 = 0.0
+        t1 = self.attack
+        t2 = t1 + self.decay_time
+        t3 = t2 + self.sustain_time
+        t4 = self._duration
+
+        # calculate ADSR envelopes
+        attack_envelope = interpolate(t, t0, t1, 0, 1)
+        decay_envelope = interpolate(t, t1, t2, 1, self.sustain_level)
+        sustain_envelope = interpolate(
+            t, t2, t3, self.sustain_level, self.sustain_level
+        )
+        release_envelope = interpolate(t, t3, t4, self.sustain_level, 0)
+
+        # add them to result
+        result = (
+            result
+            + attack_envelope
+            + decay_envelope
+            + sustain_envelope
+            + release_envelope
+        )
+
+        return result
 
     def render(self, t: np.ndarray) -> np.ndarray:
         """

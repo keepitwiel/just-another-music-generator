@@ -5,11 +5,11 @@ from just_another_music_generator.tone import Tone
 def test_find_bounds():
     tone = Tone(
         start_time=1.00001,
-        attack=0.0,
-        decay=0.5,
+        attack_time=0.0,
+        decay_time=0.5,
         sustain_time=0.0,
         sustain_level=0.0,
-        release=0.0,
+        release_time=0.0,
         pitch=440,
         volume=0.5,
     )
@@ -32,11 +32,11 @@ def test_add_tone():
         [
             Tone(
                 start_time=0,
-                attack=0.0,
-                decay=0.5,
+                attack_time=0.0,
+                decay_time=0.5,
                 sustain_time=0.0,
                 sustain_level=0.0,
-                release=0.0,
+                release_time=0.0,
                 pitch=440,
                 volume=0.5,
             )
@@ -51,11 +51,11 @@ def test_render():
         [
             Tone(
                 start_time=0,
-                attack=0.0,
-                decay=0.5,
+                attack_time=0.0,
+                decay_time=0.5,
                 sustain_time=0.0,
                 sustain_level=0.0,
-                release=0.0,
+                release_time=0.0,
                 pitch=440,
                 volume=0.5,
             )
