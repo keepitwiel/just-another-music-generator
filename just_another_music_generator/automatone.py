@@ -1,11 +1,9 @@
 from typing import List, Union
 import logging
-import os
 import sys
 from hashlib import md5
 
 import numpy as np
-from pydub import AudioSegment
 from matplotlib import pyplot as plt
 
 from just_another_music_generator.activations import (
@@ -14,7 +12,7 @@ from just_another_music_generator.activations import (
 )
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)
 logger.addHandler(handler)
 
@@ -164,40 +162,3 @@ class Automatone:
             ticks=range(0, len(freqs), step_size), labels=freqs[::step_size]
         )
         return axes
-
-
-def write_audio(au, sample_rate, output_root, params, hashed) -> None:
-    if not (os.path.exists(output_root)):
-        os.mkdir(output_root)
-
-    path = f"{output_root}/{hashed}"
-    if not (os.path.exists(path)):
-        os.mkdir(path)
-
-    params_path = f"{path}/params.txt"
-    logger.info(f"Write parameters to {params_path}...")
-    try:
-        with open(params_path, "w+") as file:
-            file.write(params)
-    except IOError as e:
-        logger.error(f"Error writing file: {e}")
-
-    audio_path = f"{path}/audio.wav"
-
-    logger.info(f"Write audio to {audio_path}...")
-    segment = create_audiosegment(au, sample_rate=sample_rate)
-    try:
-        segment.export(audio_path, format="wav")
-    except IOError as e:
-        logger.error(f"Error writing file: {e}")
-
-
-def create_audiosegment(arr: np.ndarray, sample_rate: int) -> AudioSegment:
-    tmp = (arr * 2**31).astype(np.int32)
-    result = AudioSegment(
-        tmp.tobytes(),
-        frame_rate=sample_rate,
-        sample_width=tmp.dtype.itemsize,
-        channels=1,
-    )
-    return result

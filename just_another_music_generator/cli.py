@@ -3,10 +3,11 @@ import sys
 
 import click
 
-from just_another_music_generator.automatone import Automatone, write_audio
+from just_another_music_generator.automatone import Automatone
+from just_another_music_generator.audio import write_audio
 
 logger = logging.getLogger()
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 handler = logging.StreamHandler(sys.stdout)
 logger.addHandler(handler)
 
@@ -121,12 +122,10 @@ def generate(
     logger.info(automatone.__str__())
     au = automatone.render_audio(sample_rate=sample_rate)
 
-    logger.info(f"Write audio to file. Root dir: {output_root}")
+    logger.info(f"Write audio to file. Output dir: {output_root}")
     logger.info(f"Hash: {automatone.hash}")
 
-    params = automatone.__str__()
-    hashed = automatone.hash
-    write_audio(au, sample_rate, output_root, params, hashed)
+    write_audio(au, sample_rate, output_root)
 
 
 def parse_rules(rules):
