@@ -24,9 +24,11 @@ repos:
     hooks:
     -   id: mypy
 
-#-   repo: local
-#    hooks:
-#    -   id: unit tests
-#        name: unit tests
-#        language: python
-#        entry: pytest ./just_another_music_generator
+-   repo: local
+    hooks:
+    -   id: unittests
+        name: unittests
+        language: system
+        entry: pytest
+        pass_filenames: false
+        always_run: true
