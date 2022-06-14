@@ -23,3 +23,10 @@ repos:
     rev: ''
     hooks:
     -   id: mypy
+
+-   repo: local
+    hooks:
+    -   id: unit tests
+        name: unit tests
+        language: python
+        entry: pytest
