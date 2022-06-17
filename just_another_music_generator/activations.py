@@ -41,7 +41,11 @@ def trigger_sounds(
     activations: np.ndarray,
     interval: float,
     sequence_offset: int,
-    duration: float,
+    attack_time: float,
+    decay_time: float,
+    sustain_time: float,
+    sustain_level: float,
+    release_time: float,
     frequencies: List[float],
     pan: float,
     volume: float,
@@ -50,10 +54,17 @@ def trigger_sounds(
     given boolean activation matrix, trigger sounds where
     matrix == 1 into a Sequence object
 
+    :param attack_time: attack duration of envelope in seconds
+    :param decay_time: decay duration of envelope in seconds
+    :param sustain_time: sustain duration of envelope in seconds
+    :param sustain_level: sustain level of envelope
+    :param release_time: release duration of envelope in seconds
     :param activations: boolean activation matrix
     :param interval: time between activations
-    :param sequence_offset: ...
-    :param duration: tone duration in seconds
+    :param sequence_offset: number of empty activations before start
+        I.e. if sequence_offset = 10, then the 1st activation
+        will start at 10
+    :param release_time: tone duration in seconds
     :param frequencies: list of frequencies to trigger
     :param pan: stereo panning (0=left, 1=right)
     :return: Sequence object
@@ -66,11 +77,11 @@ def trigger_sounds(
                 frequency = frequencies[tone_idx]
                 tone = Tone(
                     start_time=interval * (time_idx + sequence_offset),
-                    attack_time=0,
-                    decay_time=duration,
-                    sustain_time=0,
-                    sustain_level=0,
-                    release_time=0,
+                    attack_time=attack_time,
+                    decay_time=decay_time,
+                    sustain_time=sustain_time,
+                    sustain_level=sustain_level,
+                    release_time=release_time,
                     pitch=frequency,
                     volume=volume,
                     pan=pan,

@@ -5,7 +5,7 @@ package = "just_another_music_generator"
 
 setup(
     name=name,
-    version="0.10.2",
+    version="0.11.0",
     packages=[package],
     entry_points={"console_scripts": [f"{name}={package}.cli:cli"]},
 )

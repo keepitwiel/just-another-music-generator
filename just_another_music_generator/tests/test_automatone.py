@@ -12,7 +12,11 @@ KWARGS = {
     "sequence_offset": 0,
     "skip": 128,
     "interval": 0.125,
-    "tone_duration": 0.05,
+    "attack_time": 0.01,
+    "decay_time": 0.02,
+    "sustain_time": 0.03,
+    "sustain_level": 0.5,
+    "release_time": 0.04,
     "scale": "pentatonic",
     "root_frequency": 440,
     "pan": 0.5,
@@ -60,7 +64,7 @@ def test_automatone_frequencies_chromatic():
 def test_automatone_hash():
     automatone = Automatone(**KWARGS)
     h = automatone.hash
-    assert h == "5bee22dda0f7dddb6e7fd4d52f4422f4"
+    assert h == "a97dc567677fb600811cfee3ab78247c"
 
 
 def test_automatone_generate_sequence():

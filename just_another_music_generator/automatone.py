@@ -34,7 +34,11 @@ class Automatone:
         sequence_offset: int,
         skip: int,
         interval: float,
-        tone_duration: float,
+        attack_time: float,
+        decay_time: float,
+        sustain_time: float,
+        sustain_level: float,
+        release_time: float,
         scale: str,
         root_frequency: float,
         pan: float,
@@ -70,7 +74,11 @@ class Automatone:
         self.sequence_offset = sequence_offset
         self.skip = skip
         self.interval = interval
-        self.tone_duration = tone_duration
+        self.attack_time = attack_time
+        self.decay_time = decay_time
+        self.sustain_time = sustain_time
+        self.sustain_level = sustain_level
+        self.release_time = release_time
         self.scale = scale
         self.root_frequency = root_frequency
         self.pan = pan
@@ -84,7 +92,9 @@ class Automatone:
             f"Sequence length: {self.sequence_length}\n"
             f"Skip: {self.skip}\n"
             f"Tone interval: {self.interval}\n"
-            f"Tone duration: {self.tone_duration}\n"
+            f"ADSLR: {self.attack_time}, {self.decay_time}, "
+            f"{self.sustain_time}, {self.sustain_level}, "
+            f"{self.release_time}\n"
             f"Scale: {self.scale}\n"
             f"Root frequency: {self.root_frequency}\n"
         )
@@ -134,7 +144,11 @@ class Automatone:
             self._activations,
             interval=self.interval,
             sequence_offset=self.sequence_offset,
-            duration=self.tone_duration,
+            attack_time=self.attack_time,
+            decay_time=self.decay_time,
+            sustain_time=self.sustain_time,
+            sustain_level=self.sustain_level,
+            release_time=self.release_time,
             frequencies=self._frequencies,
             pan=self.pan,
             volume=self.volume,

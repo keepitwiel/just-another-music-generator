@@ -64,10 +64,11 @@ def cli():
     help="Interval between onsets of tones in seconds.",
 )
 @click.option(
-    "--tone-duration",
-    default=0.05,
+    "--adslr",
+    default="0.01,0.02,0.03,0.5,0.04",
     show_default=True,
-    help="Tone duration in seconds.",
+    help="adslr: (a)ttack, (d)ecay, (s)ustain, -(l)evel, "
+    "(r)release parameters. adsr in seconds, level between 0 and 1",
 )
 @click.option(
     "--scale",
@@ -107,7 +108,7 @@ def generate(
     skip: int,
     sample_rate: int,
     interval: float,
-    tone_duration: float,
+    adslr: str,
     scale: str,
     root_frequency: float,
     pan: float,
@@ -120,19 +121,24 @@ def generate(
 
     logger.info("generating Automatone object...")
     rules = parse_rules(rules)
+    adslr = parse_adslr(adslr)
 
     automatone = Automatone(
-        rules,
-        tone_range,
-        sequence_length,
-        sequence_offset,
-        skip,
-        interval,
-        tone_duration,
-        scale,
-        root_frequency,
-        pan,
-        volume,
+        rules=rules,
+        tone_range=tone_range,
+        sequence_length=sequence_length,
+        sequence_offset=sequence_offset,
+        skip=skip,
+        interval=interval,
+        attack_time=adslr[0],
+        decay_time=adslr[1],
+        sustain_time=adslr[2],
+        sustain_level=adslr[3],
+        release_time=adslr[4],
+        scale=scale,
+        root_frequency=root_frequency,
+        pan=pan,
+        volume=volume,
     )
 
     logger.info(automatone.__str__())
@@ -155,6 +161,19 @@ def parse_rules(rules):
         an integer or a list of integers separated by commas (e.g. "1,2,3,5,8")
         """
     return rules
+
+
+def parse_adslr(string):
+    s = string.strip("[]")
+    s = s.split(",")
+    try:
+        adslr = [float(v) for v in s]
+    except ValueError:
+        raise """
+        Invalid parameter passed: rules. "rules" should be either
+        an integer or a list of integers separated by commas (e.g. "1,2,3,5,8")
+        """
+    return adslr
 
 
 if __name__ == "__main__":
