@@ -21,6 +21,8 @@ KWARGS = {
     "root_frequency": 440,
     "pan": 0.5,
     "volume": 0.5,
+    "wave": "square",
+    "noise_ratio": 0.0,
 }
 
 
@@ -64,7 +66,7 @@ def test_automatone_frequencies_chromatic():
 def test_automatone_hash():
     automatone = Automatone(**KWARGS)
     h = automatone.hash
-    assert h == "a97dc567677fb600811cfee3ab78247c"
+    assert h == "6510f3a25a624c0e35450788c65cb3d1"
 
 
 def test_automatone_generate_sequence():

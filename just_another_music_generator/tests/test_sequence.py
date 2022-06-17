@@ -13,6 +13,8 @@ def test_find_bounds():
         pitch=440,
         volume=0.5,
         pan=0.5,
+        wave="square",
+        noise_ratio=0.0,
     )
     sample_rate = 1000
     expected = (1000, 1501)
@@ -41,6 +43,8 @@ def test_add_tone():
                 pitch=440,
                 volume=0.5,
                 pan=0.5,
+                wave="square",
+                noise_ratio=0.0,
             )
         ]
     )
@@ -61,6 +65,8 @@ def test_render():
                 pitch=440,
                 volume=0.5,
                 pan=0.5,
+                wave="square",
+                noise_ratio=0.0,
             )
         ]
     )

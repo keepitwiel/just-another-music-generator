@@ -49,6 +49,8 @@ def trigger_sounds(
     frequencies: List[float],
     pan: float,
     volume: float,
+    wave: str,
+    noise_ratio: float,
 ) -> Sequence:
     """
     given boolean activation matrix, trigger sounds where
@@ -67,6 +69,10 @@ def trigger_sounds(
     :param release_time: tone duration in seconds
     :param frequencies: list of frequencies to trigger
     :param pan: stereo panning (0=left, 1=right)
+    :param volume: volume
+    :param wave: type of soundwave to be used. "sine" or "square"
+    :param noise_ratio: amount of noise to be used. 0=no noise, 1=only noise
+
     :return: Sequence object
     """
     s = Sequence()
@@ -85,6 +91,8 @@ def trigger_sounds(
                     pitch=frequency,
                     volume=volume,
                     pan=pan,
+                    wave=wave,
+                    noise_ratio=noise_ratio,
                 )
                 s.add([tone])
     return s

@@ -38,7 +38,8 @@ class Tone:
         pitch: float,
         volume: float,
         pan: float,
-        wave: str = "square",
+        wave: str,
+        noise_ratio: float,
     ) -> None:
         """
         Defines a sine carrier wave that is convoluted
@@ -61,7 +62,7 @@ class Tone:
         self.sustain_level = sustain_level
         self.release_time = release_time
 
-        self.noise = 0.1
+        self.noise_ratio = noise_ratio
 
     @property
     def _duration(self):
@@ -132,7 +133,7 @@ class Tone:
             raise NotImplementedError
 
         noise = np.random.normal(0, 1, len(u))
-        mixed = (1 - self.noise) * carrier + self.noise * noise
+        mixed = (1 - self.noise_ratio) * carrier + self.noise_ratio * noise
         x = self.volume * envelope * mixed
         x = x.reshape(-1, 1)
 

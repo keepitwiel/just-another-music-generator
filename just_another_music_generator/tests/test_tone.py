@@ -14,6 +14,8 @@ def test_tone():
         pitch=440,
         volume=0.5,
         pan=0.5,
+        wave="square",
+        noise_ratio=0.0,
     )
     assert True
 
@@ -29,6 +31,8 @@ def test_tone_render_array():
         pitch=440,
         volume=0.5,
         pan=0.5,
+        wave="square",
+        noise_ratio=0.0,
     )
     t = np.linspace(-1, 2, 101)
     x = tone.render(t)
@@ -77,6 +81,8 @@ def test_tone_envelope():
         pitch=440,
         volume=0.5,
         pan=0.5,
+        wave="square",
+        noise_ratio=0.0,
     )
     t = np.linspace(0, 1, 101)
     envelope = tone._calculate_envelope(t=t)

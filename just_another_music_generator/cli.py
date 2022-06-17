@@ -139,6 +139,8 @@ def generate(
         root_frequency=root_frequency,
         pan=pan,
         volume=volume,
+        wave="square",
+        noise_ratio=0.1,
     )
 
     logger.info(automatone.__str__())

@@ -1,7 +1,7 @@
 import os
 from click.testing import CliRunner
 
-from just_another_music_generator.cli import generate, parse_rules
+from just_another_music_generator.cli import generate, parse_rules, parse_adslr
 
 runner = CliRunner()
 
@@ -14,6 +14,11 @@ def test_parse_rules_ok_1():
 def test_parse_rules_ok_2():
     result = parse_rules("1,2,3")
     assert result == [1, 2, 3]
+
+
+def test_parse_adslr_ok_2():
+    result = parse_adslr("0.1,0.2,0.3")
+    assert result == [0.1, 0.2, 0.3]
 
 
 def test_parse_rules_from_cli_ok_1():
