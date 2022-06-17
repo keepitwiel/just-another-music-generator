@@ -38,6 +38,7 @@ class Automatone:
         scale: str,
         root_frequency: float,
         pan: float,
+        volume: float,
     ):
         """
         An Automatone is a class that defines a piece of audio
@@ -72,6 +73,8 @@ class Automatone:
         self.tone_duration = tone_duration
         self.scale = scale
         self.root_frequency = root_frequency
+        self.pan = pan
+        self.volume = volume
 
     def __str__(self):
         params = (
@@ -133,6 +136,8 @@ class Automatone:
             sequence_offset=self.sequence_offset,
             duration=self.tone_duration,
             frequencies=self._frequencies,
+            pan=self.pan,
+            volume=self.volume,
         )
         return result
 

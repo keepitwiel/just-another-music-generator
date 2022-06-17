@@ -88,6 +88,12 @@ def cli():
     help="Stereo pan (0.0 = left, 0.5 = center, 1.0 = right)",
 )
 @click.option(
+    "--volume",
+    default=0.5,
+    show_default=True,
+    help="Relative volume. Can be any number",
+)
+@click.option(
     "--output-root",
     default="/tmp/just-another-music-generator",
     show_default=True,
@@ -105,6 +111,7 @@ def generate(
     scale: str,
     root_frequency: float,
     pan: float,
+    volume: float,
     output_root: str,
 ):
     """
@@ -125,6 +132,7 @@ def generate(
         scale,
         root_frequency,
         pan,
+        volume,
     )
 
     logger.info(automatone.__str__())
