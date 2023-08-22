@@ -2,9 +2,9 @@ from typing import List, Any
 
 import numpy as np
 
-from just_another_music_generator.automata import generate_cellular_automaton
-from just_another_music_generator.sequence import Sequence
-from just_another_music_generator.tone import Tone
+from automata import generate_cellular_automaton
+from sequence import Sequence
+from tone import Tone
 
 
 def generate_activations(

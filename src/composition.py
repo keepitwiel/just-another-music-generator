@@ -1,8 +1,8 @@
 import numpy as np
 from matplotlib import pyplot as plt
 
-from just_another_music_generator.automatone import Automatone
-from just_another_music_generator.sequence import Sequence
+from automatone import Automatone
+from sequence import Sequence
 
 
 class Composition:

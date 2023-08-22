@@ -3,7 +3,7 @@ from typing import Tuple, List
 import numpy as np
 from tqdm import tqdm
 
-from just_another_music_generator.tone import Tone
+from tone import Tone
 
 
 def find_bounds(tone: Tone, sample_rate: int) -> Tuple[int, int]:

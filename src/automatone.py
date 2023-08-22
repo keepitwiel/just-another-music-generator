@@ -6,7 +6,7 @@ from hashlib import md5
 import numpy as np
 from matplotlib import pyplot as plt
 
-from just_another_music_generator.activations import (
+from activations import (
     trigger_sounds,
     generate_activations,
 )

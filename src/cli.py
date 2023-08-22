@@ -3,8 +3,8 @@ import sys
 
 import click
 
-from just_another_music_generator.automatone import Automatone
-from just_another_music_generator.audio import write_audio
+from automatone import Automatone
+from audio import write_audio
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
