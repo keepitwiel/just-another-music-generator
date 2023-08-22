@@ -49,7 +49,6 @@ class Tone:
         :param duration: duration of the note
         :param pitch: tone pitch in Hertz
         """
-        # TODO: implement Attack/Decay/Sustain/Release
         self.start_time = start_time
         self.pitch = pitch
         self.volume = volume

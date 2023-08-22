@@ -17,11 +17,11 @@ python setup.py install
 ## CLI usage
 On command line, type
 ```commandline
-just-another-music-generator
+just-another-music-generator generate
 ```
 
-to generate an audio sequence and store it as a numpy file. 
-The file can be found at `/tmp/tmp.npy`.
+to generate an audio sequence and store it as a numpy file.
+The file can be found at `/tmp/just-another-music-generator/audio.wav`.
 ```commandline
 just-another-music-generator --help
 ```
